@@ -1,26 +1,80 @@
 <template>
 	<view class="home">
-		<navbar :is-search="true"></navbar>
+		<navbar :is-search="true" @input="onInputChange"></navbar>
 		<view class="home-list">
-			<view class="label-box">
+			<view class="label-box" v-if="!showSearchResult">
 				<view class="label-header">
 					<text class="label-title">搜索历史</text>
-					<text class="label-clear">清空</text>
+					<text class="label-clear" @click="clearHistory">清空</text>
 				</view>
-				<view class="label-content">
-					<view class="label-item" v-for="item in 10">{{ item }}neirong</view>
+				<view class="label-content" v-if="historyList.length > 0">
+					<view class="label-item" v-for="item in historyList">{{ item.name }}</view>
 				</view>
+				<view v-if="historyList.length === 0" class="no-data">没有找到搜索历史记录</view>
+			</view>
+			<view class="search-result" v-else>
+				<list-scroll
+					class="swiper-item-list" 
+					:theTag="searchResult" :needLoadMore="false">
+				</list-scroll>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {mapState} from 'vuex';
+	import Util from '../../common/utils.js';
 	export default {
+		computed:{
+			...mapState(['historyList'])
+		},
 		data() {
 			return {
-				
+				showSearchResult: false,
+				searchResult:{
+					type:'search_result',
+					items:[]
+				},
+				lastSearchAt:false
 			};
+		},
+		methods:{
+			onInputChange: function(payload){
+				if(!this.lastSearchAt){
+					this.lastSearchAt = true;
+					this.timer = setTimeout(()=>{
+						this.lastSearchAt = false;
+						let q = payload.value.trim();
+						if(q.length < 2){
+							this.searchResult.items = [];
+							this.showSearchResult = false;
+						} else {
+							this.pushKeywordToHistory(q);
+							Util.searchByKeyword(q).then(res => {
+								if(Util.isAjaxResOk(res) && res.data.items.length > 0){
+									this.searchResult.items = res.data.items;
+									this.showSearchResult = true;
+								} else {
+									this.showSearchResult = false;
+								}
+							})
+						}
+					}, 900); // 两次搜索之间必有900毫秒的延迟
+				}
+			},
+			pushKeywordToHistory: function(keyword){
+				this.$store.dispatch(
+					'set_history', // Action 中的方法名
+					{name: keyword} // Action 的方法的第二个参数
+				)
+			},
+			clearHistory: function(){
+				this.$store.dispatch(
+					'clear_history', // Action 中的方法名
+					null // Action 的方法的第二个参数
+				)
+			}
 		}
 	}
 </script>
@@ -67,6 +121,14 @@ page{
 				font-size: 14px;
 				color: #666;
 			}
+		}
+		.no-data{
+			height: 200px;
+			line-height: 200px;
+			width: 100%;
+			text-align: center;
+			color: #666;
+			font-size: 12px;
 		}
 	}
 }

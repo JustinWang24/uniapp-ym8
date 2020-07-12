@@ -8,9 +8,9 @@
 			@scrolltolower="onScrollToLower">
 			<view>
 				<!-- 新闻卡片 -->
-				<uni-load-more v-if="showLoadMoreTop" iconType="snow" status="loading"></uni-load-more>
+				<uni-load-more v-if="needLoadMore && showLoadMoreTop" iconType="snow" status="loading"></uni-load-more>
 				<list-card v-for="(item, idx) in theLocalTag.items" :key="idx" :type="theLocalTag.type" :item="item"></list-card>
-				<uni-load-more iconType="snow" :status="loadMoreStatus"></uni-load-more>
+				<uni-load-more v-if="needLoadMore" iconType="snow" :status="loadMoreStatus"></uni-load-more>
 			</view>
 		</scroll-view>
 	</view>
@@ -25,6 +25,10 @@
 				default(){
 					return {}
 				}
+			},
+			needLoadMore: {
+				type: Boolean,
+				default: true
 			}
 		},
 		data() {

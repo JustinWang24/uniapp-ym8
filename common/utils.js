@@ -33,6 +33,14 @@ export default {
 			{},
 		);
 	},
+	// 根据关键字搜索
+	searchByKeyword: function(keyword){
+		return request.get(
+			Constants.API.NEWS.SEARCH, 
+			{q:keyword}, 
+			{},
+		);
+	},
     /**
      * 根据 id 来定位数组中的 item
      * @param id

@@ -11,7 +11,7 @@
 				
 				<view v-if="isSearch" class="navbar-search">
 					<!-- 真实搜索功能 -->
-					<input class="query-input" type="text" v-model="query" placeholder="请输入你感兴趣的话题 ...">
+					<input class="query-input" type="text" v-model="query" placeholder="请输入你感兴趣的话题 ..." @input="onInputChange">
 				</view>
 				
 				<view v-else class="navbar-search" @click.stop="openSearchPage">
@@ -75,6 +75,10 @@
 				uni.navigateBack({
 					animationDuration:300
 				})
+			},
+			onInputChange: function(e){
+				const {value} = e.detail;
+				this.$emit('input', {value: value});
 			}
 		}
 	}
@@ -117,6 +121,7 @@
 					.query-input{
 						font-size: 12px;
 						margin-top: 3px;
+						width: 100%;
 					}
 				}
 				&.withBack{
