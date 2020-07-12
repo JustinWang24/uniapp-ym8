@@ -8,14 +8,16 @@
 					<text class="label-clear" @click="clearHistory">清空</text>
 				</view>
 				<view class="label-content" v-if="historyList.length > 0">
-					<view class="label-item" v-for="item in historyList">{{ item.name }}</view>
+					<view @click="onSearchHistoryItemClicked(item.name)" class="label-item" v-for="item in historyList">{{ item.name }}</view>
 				</view>
 				<view v-if="historyList.length === 0" class="no-data">没有找到搜索历史记录</view>
 			</view>
 			<view class="search-result" v-else>
 				<list-scroll
 					class="swiper-item-list" 
-					:theTag="searchResult" :needLoadMore="false">
+					:theTag="searchResult"
+					:needLoadMore="false"
+					@card-list-item-clicked="onListItemClicked">
 				</list-scroll>
 			</view>
 		</view>
@@ -36,7 +38,8 @@
 					type:'search_result',
 					items:[]
 				},
-				lastSearchAt:false
+				lastSearchAt:false,
+				lastSearchKeyword:'',
 			};
 		},
 		methods:{
@@ -50,15 +53,8 @@
 							this.searchResult.items = [];
 							this.showSearchResult = false;
 						} else {
-							this.pushKeywordToHistory(q);
-							Util.searchByKeyword(q).then(res => {
-								if(Util.isAjaxResOk(res) && res.data.items.length > 0){
-									this.searchResult.items = res.data.items;
-									this.showSearchResult = true;
-								} else {
-									this.showSearchResult = false;
-								}
-							})
+							this.lastSearchKeyword = q; // 记录下最后一个搜索的关键字
+							this._doSearch(q);
 						}
 					}, 900); // 两次搜索之间必有900毫秒的延迟
 				}
@@ -74,6 +70,25 @@
 					'clear_history', // Action 中的方法名
 					null // Action 的方法的第二个参数
 				)
+			},
+			// 当搜索结果列表中的项目被点击
+			onListItemClicked: function(payload){
+				// 只有结果被点击, 才把关键字推入到搜索历史结果中
+				this.pushKeywordToHistory(this.lastSearchKeyword);
+			},
+			// 直接点击搜索历史中的关键字的响应
+			onSearchHistoryItemClicked: function(q){
+				this._doSearch(q);
+			},
+			_doSearch: function(q){
+				Util.searchByKeyword(q).then(res => {
+					if(Util.isAjaxResOk(res) && res.data.items.length > 0){
+						this.searchResult.items = res.data.items;
+						this.showSearchResult = true;
+					} else {
+						this.showSearchResult = false;
+					}
+				})
 			}
 		}
 	}

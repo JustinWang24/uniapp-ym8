@@ -82,7 +82,8 @@
 		},
 		methods: {
 			onItemClicked: function(){
-				console.log('打开新闻的详情', this.item);
+				// console.log('打开新闻的详情', this.item);
+				this.$emit('card-clicked',{item: this.item});
 			}
 		}
 	}

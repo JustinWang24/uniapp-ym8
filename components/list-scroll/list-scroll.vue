@@ -9,7 +9,13 @@
 			<view>
 				<!-- 新闻卡片 -->
 				<uni-load-more v-if="needLoadMore && showLoadMoreTop" iconType="snow" status="loading"></uni-load-more>
-				<list-card v-for="(item, idx) in theLocalTag.items" :key="idx" :type="theLocalTag.type" :item="item"></list-card>
+				<list-card 
+					v-for="(item, idx) in theLocalTag.items" 
+					:key="idx" 
+					:type="theLocalTag.type" 
+					:item="item"
+					@card-clicked="onCardClicked"
+				></list-card>
 				<uni-load-more v-if="needLoadMore" iconType="snow" :status="loadMoreStatus"></uni-load-more>
 			</view>
 		</scroll-view>
@@ -76,6 +82,12 @@
 							}
 						}
 					})
+			},
+			// 当列表中的项被点击时
+			onCardClicked: function(payload){
+				// 在列表中，显示一些东西，表示该项目被点击过
+				// 再发布该事件: 表示该列表的类型, 例如新闻，话题，搜索结果等
+				this.$emit('card-list-item-clicked',{type:this.theTag.type, item: payload.item});
 			}
 		}
 	}
