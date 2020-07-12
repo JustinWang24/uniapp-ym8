@@ -1,1 +1,0 @@
-<view><view class="card"><view class="thumbnail"><image src="{{item.picture}}" mode="aspectFill"></image></view><view class="content"><view class="title"><text>{{item.title_cn}}</text></view><view class="snippet"><view class="tag"><view class="tag-txt">{{item.trend}}</view></view><view class="views-count">{{"关注:"+item.traffic+"+"}}</view></view></view></view></view>
