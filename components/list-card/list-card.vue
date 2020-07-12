@@ -82,7 +82,8 @@
 		},
 		methods: {
 			onItemClicked: function(){
-				console.log('打开新闻的详情', this.item);
+				// console.log('打开新闻的详情', this.item);
+				this.$emit('card-clicked',{item: this.item});
 			}
 		}
 	}
@@ -97,6 +98,7 @@
 	border-radius: 5px;
 	box-shadow: 0 0 5px 1px rgba($color: #f5f5f5, $alpha: 1.0);
 	box-sizing: border-box;
+	background-color: white;
 	.thumbnail{
 		width: 60px;
 		height: 60px;

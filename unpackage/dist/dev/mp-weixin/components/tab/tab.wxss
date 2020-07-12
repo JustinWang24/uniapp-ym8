@@ -63,9 +63,7 @@
   color: #f07373;
 }
 .tab .tab-fixed-el {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
+  display: none;
   -webkit-box-pack: center;
   -webkit-justify-content: center;
           justify-content: center;

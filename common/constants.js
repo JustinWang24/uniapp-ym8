@@ -36,6 +36,9 @@ export default {
 		TAGS:{
 			GET_ALL:'/api/trends/get-tags',
 			GET_BY_TAG_NAME:'/api/trends/get-by-tag-name',
+		},
+		NEWS:{
+			SEARCH:'/api/trends/search-news'
 		}
 	},
 }
