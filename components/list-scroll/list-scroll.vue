@@ -1,0 +1,91 @@
+<template>
+	<view class="scroll-items">
+		<!-- 上下滚动的所有新闻项目 -->
+		<scroll-view 
+			class="scroll-view-wrap" 
+			scroll-y="true"
+			@scrolltoupper="onScrollToUpper"
+			@scrolltolower="onScrollToLower">
+			<view>
+				<!-- 新闻卡片 -->
+				<uni-load-more v-if="showLoadMoreTop" iconType="snow" status="loading"></uni-load-more>
+				<list-card v-for="(item, idx) in theLocalTag.items" :key="idx" :type="theLocalTag.type" :item="item"></list-card>
+				<uni-load-more iconType="snow" :status="loadMoreStatus"></uni-load-more>
+			</view>
+		</scroll-view>
+	</view>
+</template>
+
+<script>
+	import Util from '../../common/utils.js';
+	export default {
+		props:{
+			theTag:{
+				type: Object,
+				default(){
+					return {}
+				}
+			}
+		},
+		data() {
+			return {
+				theLocalTag:this.theTag,
+				loadMoreStatus: 'noMore',
+				showLoadMoreTop: false, // 顶部的拉动刷新控件
+				currentPage: 1, // 当前的分页编号, 分页为0的在启动时已经加载了，所以这里是1
+			};
+		},
+		methods:{
+			// 当滚动动页面最下方
+			onScrollToLower: function(e){
+				this.loadMoreStatus = 'loading';
+				Util.loadMoreByTag('bottom',this.theLocalTag.type, this.currentPage)
+					.then(res => {
+						if(Util.isAjaxResOk(res)){
+							this.loadMoreStatus = 'noMore';
+							if(res.data.items.length > 0){
+								// 有更多新闻加载
+								res.data.items.forEach(item => {
+									this.theLocalTag.items.push(item);
+								})
+							}
+						}
+					})
+			},
+			// 当滚动到页面最上方
+			onScrollToUpper: function(e){
+				// 获取最顶端的item的id
+				let firstId = 0;
+				if(this.theLocalTag.items.length > 0){
+					firstId = this.theLocalTag.items[0].id;
+				}
+				this.showLoadMoreTop = true;
+				Util.loadMoreByTag('top',this.theLocalTag.type, this.currentPage, firstId)
+					.then(res => {
+						if(Util.isAjaxResOk(res)){
+							this.showLoadMoreTop = false;
+							if(res.data.items.length > 0){
+								// 有更多新闻加载
+								res.data.items.forEach(item => {
+									this.theLocalTag.items.unshift(item);
+								})
+							}
+						}
+					})
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+.scroll-items{
+	flex: 1;
+	box-sizing: border-box;
+	overflow: hidden;
+	.scroll-view-wrap{
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+}
+</style>
