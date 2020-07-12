@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 基础卡片 -->
-		<view class="card">
+		<view class="card" @click="onItemClicked">
 			<view class="thumbnail">
 				<image :src="item.picture" mode="aspectFill"></image>
 			</view>
@@ -13,7 +13,10 @@
 					<view class="tag">
 						<view class="tag-txt">{{ item.trend }}</view>
 					</view>
-					<view class="views-count">关注:{{ item.traffic }}+</view>
+					<view class="views-count">
+						<!-- 关注按钮组件 -->
+						<like-button :item="item"></like-button>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -76,6 +79,11 @@
 			return {
 				
 			};
+		},
+		methods: {
+			onItemClicked: function(){
+				console.log('打开新闻的详情', this.item);
+			}
 		}
 	}
 </script>
@@ -135,7 +143,7 @@
 				}
 			}
 			.views-count{
-				color: #999;
+				color: $mk-base-color;
 				line-height: 1.5;
 			}
 		}
