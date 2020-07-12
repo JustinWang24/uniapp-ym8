@@ -85,7 +85,8 @@
 	}
 	
 	.tab-fixed-el{
-		display: flex;
+		// display: flex;
+		display: none;
 		justify-content: center;
 		align-items: center;
 		width: 45px;

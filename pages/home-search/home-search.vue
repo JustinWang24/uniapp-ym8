@@ -70,6 +70,9 @@
 					'clear_history', // Action 中的方法名
 					null // Action 的方法的第二个参数
 				)
+				uni.showToast({
+					title:'搜索历史已清空'
+				})
 			},
 			// 当搜索结果列表中的项目被点击
 			onListItemClicked: function(payload){

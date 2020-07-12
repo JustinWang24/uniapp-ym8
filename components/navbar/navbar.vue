@@ -72,8 +72,11 @@
 				})
 			},
 			onBack: function(){
-				uni.navigateBack({
-					animationDuration:300
+				// uni.navigateBack({
+				// 	animationDuration:300
+				// })
+				uni.switchTab({
+					url:'/pages/tabbar/index/index'
 				})
 			},
 			onInputChange: function(e){
