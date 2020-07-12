@@ -3,13 +3,25 @@
 		<view class="navbar-fixed">
 			<!-- 手机顶部的状态栏 -->
 			<view :style="{height: statusBarHeight  + 'px'}"></view>
-			<view class="navbar-content" :style="{height: navBarHeight + 'px', width: searchBarWidth + 'px'}">
-				<view class="navbar-search">
+			<!-- 导航栏的搜索栏 -->
+			<view class="navbar-content" :class="{withBack:isSearch}" :style="{height: navBarHeight + 'px', width: searchBarWidth + 'px'}">
+				<view class="back-to-btn" v-if="isSearch" @click.stop="onBack">
+					<uni-icons type="back" size="20" color="#fff"></uni-icons>
+				</view>
+				
+				<view v-if="isSearch" class="navbar-search">
+					<!-- 真实搜索功能 -->
+					<input class="query-input" type="text" v-model="query" placeholder="请输入你感兴趣的话题 ...">
+				</view>
+				
+				<view v-else class="navbar-search" @click.stop="openSearchPage">
+					<!-- 不需要搜索功能 -->
 					<view class="navbar-search_icon">
 						<uni-icons type="search" size="16" color="#999"></uni-icons>
 					</view>
-					<view class="navbar-search_text">搜索</view>
+					<view class="navbar-search_text">搜索 澳洲最新资讯 吃喝玩乐 吐槽大会</view>
 				</view>
+				
 			</view>
 		</view>
 		<view class="navbar-placeholder" :style="{height: statusBarHeight + navBarHeight + 'px'}">
@@ -19,12 +31,20 @@
 
 <script>
 	export default {
+		props:{
+			isSearch:{
+				type:Boolean,
+				default: false,
+			}
+		},
 		data() {
 			return {
 				statusBarHeight: 0, // 在微信小程序，手机app中，设备顶部的状态栏的高度
 				navBarHeight: 45,	// 导航栏的高度
 				widthFix: 30,
 				searchBarWidth: 375,
+				// 搜索关键字
+				query: '',
 			};
 		},
 		created() {
@@ -44,6 +64,18 @@
 			// 小程序中的搜索框宽度
 			this.searchBarWidth = menuButtonInfo.left - this. widthFix;
 			// #endif
+		},
+		methods:{
+			openSearchPage: function(){
+				uni.navigateTo({
+					url:'/pages/home-search/home-search'
+				})
+			},
+			onBack: function(){
+				uni.navigateBack({
+					animationDuration:300
+				})
+			}
 		}
 	}
 </script>
@@ -79,6 +111,22 @@
 					.navbar-search_text{
 						font-size: 12px;
 						color: #999999;
+						margin-top: 2px;
+					}
+					// 搜索内容输入框
+					.query-input{
+						font-size: 12px;
+						margin-top: 3px;
+					}
+				}
+				&.withBack{
+					padding-left: 0;
+					.back-to-btn{
+						margin-left: 10px;
+						margin-right: 10px;
+					}
+					.navbar-search{
+						border-radius: 5px;
 					}
 				}
 			}
