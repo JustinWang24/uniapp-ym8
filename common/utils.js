@@ -41,6 +41,33 @@ export default {
 			{},
 		);
 	},
+	// 获取用户的数据
+	getUserProfile: function(id){
+		return request.get(
+			Constants.API.USER.GET_PROFILE, 
+			{id:id}, 
+			{},
+		);
+	},
+	// 用户登录的操作
+	login: function(username, password){
+		return request.post(
+			Constants.API.USER.LOGIN, 
+			{email: username, password: password},
+			{},
+		);
+	},
+	// 用户注册
+	/**
+	 * @param {Object} form
+	 */
+	signUp: function(form){
+		return request.post(
+			Constants.API.USER.SIGN_UP, 
+			form,
+			{},
+		);
+	},
 	// 加载文章或话题的文字内容
 	getContentById: function(id, type){
 		return request.get(

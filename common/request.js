@@ -1,6 +1,4 @@
-// import $store from '@/store/index.js'
-// import { Constants } from './constants.js';
-// import { Util } from './utils.js';
+import $store from '../store/index.js';
 
 export default {
 	// 全局配置
@@ -14,6 +12,7 @@ export default {
 		// #endif
 		header:{
 			'Content-Type':'application/json;charset=UTF-8',
+			'Authorization':'',
 		},
 		data:{},
 		method:'GET',
@@ -21,6 +20,8 @@ export default {
 	},
 	// 请求 返回promise
 	request(options = {}){
+		// 填入Authentication信息, 为用户的uuid
+		this.common.header['Authorization'] = $store.state.userProfile.uuid !== undefined ? ('Bearer ' + $store.state.userProfile.uuid) : '';
 		// 组织参数
 		options.url = this.common.baseUrl + options.url
 		options.header = options.header || this.common.header
@@ -31,15 +32,15 @@ export default {
 		// token
 		if (options.token) {
 			// options.header.token = $store.state.user.token
-			options.header.token = Constants.FAKE_UUID;
+			// options.header.token = $store.state.currentUser.uuid !== undefined ? $store.state.currentUser.uuid : '';
 			// 二次验证
-			if (options.checkToken && !options.header.token) {
+			if (this.common.header['Authorization'] === '') {
 				uni.showToast({
 					title: '请先登录',
 					icon: 'none'
 				});
 				return uni.navigateTo({
-					url: '/pages/login/login',
+					url: '/pages/tabbar/my/my.vue'
 				});
 			}
 		}
