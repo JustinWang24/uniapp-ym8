@@ -41,6 +41,14 @@ export default {
 			{},
 		);
 	},
+	// 加载文章或话题的文字内容
+	getContentById: function(id, type){
+		return request.get(
+			Constants.API.NEWS.LOAD_CONTENT, 
+			{id:id, type: type}, 
+			{},
+		);
+	},
     /**
      * 根据 id 来定位数组中的 item
      * @param id

@@ -38,7 +38,8 @@ export default {
 			GET_BY_TAG_NAME:'/api/trends/get-by-tag-name',
 		},
 		NEWS:{
-			SEARCH:'/api/trends/search-news'
+			SEARCH:'/api/trends/search-news',
+			LOAD_CONTENT:'/api/trends/load-content',
 		}
 	},
 }

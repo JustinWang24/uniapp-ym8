@@ -24,10 +24,14 @@
 				"navigationStyle":"custom"
 			}
         }
+        ,{
+            "path" : "pages/home-detail/home-detail",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
+		"navigationBarTitleText": "澳洲最新资讯 ym8.com.au",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
 	},
