@@ -4,7 +4,7 @@
 		<swiper-item class="swiper-item" v-for="(theTag, theTagIndex) in localTags" :key="theTagIndex">
 			<list-scroll 
 				class="swiper-item-list" 
-				:theTag="theTag">
+				:theTag="theTag" @card-list-item-clicked="onCardListItemClicked">
 			</list-scroll>
 		</swiper-item>
 	</swiper>
@@ -45,6 +45,18 @@
 		methods:{
 			onChange: function(e){
 				this.$emit('tag-changed',{newIndex: e.detail.current});
+			},
+			onCardListItemClicked: function(payload){
+				const params = {
+					id: payload.item.id,
+					picture: payload.item.picture,
+					traffic: payload.item.traffic,
+					trend: payload.item.trend,
+					type: payload.type
+				}
+				uni.navigateTo({
+					url:'/pages/home-detail/home-detail?params=' + JSON.stringify(params)
+				});
 			}
 		}
 	}
