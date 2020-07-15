@@ -9,8 +9,10 @@ export default {
 	FAKE_UUID:'fake',
 	API: {
 		USER:{
-			LOGIN:'/login',
+			LOGIN:'/api/profile/login',
+			SIGN_UP:'/api/profile/sign-up',
 			SAVE_PROFILE:'/api/user/save-profile',
+			GET_PROFILE:'/api/profile/get',
 			UPDATE_PASSWORD:'/api/user/update-password',
 			GET_NOTIFICATIONS:'/api/user/get-notifications',
 			GET_NEW_NOTIFICATIONS:'/api/user/get-new-notifications',
@@ -40,6 +42,7 @@ export default {
 		NEWS:{
 			SEARCH:'/api/trends/search-news',
 			LOAD_CONTENT:'/api/trends/load-content',
+			SUBMIT_COMMENT:'/api/trends/submit-comment',
 		}
 	},
 }

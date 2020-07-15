@@ -41,6 +41,33 @@ export default {
 			{},
 		);
 	},
+	// 获取用户的数据
+	getUserProfile: function(id){
+		return request.get(
+			Constants.API.USER.GET_PROFILE, 
+			{id:id}, 
+			{},
+		);
+	},
+	// 用户登录的操作
+	login: function(username, password){
+		return request.post(
+			Constants.API.USER.LOGIN, 
+			{email: username, password: password},
+			{},
+		);
+	},
+	// 用户注册
+	/**
+	 * @param {Object} form
+	 */
+	signUp: function(form){
+		return request.post(
+			Constants.API.USER.SIGN_UP, 
+			form,
+			{},
+		);
+	},
 	// 加载文章或话题的文字内容
 	getContentById: function(id, type){
 		return request.get(
@@ -48,6 +75,19 @@ export default {
 			{id:id, type: type}, 
 			{},
 		);
+	},
+	// 发表评论
+	/**
+	 * @param {Object} comemnt
+	 * @param {Object} target : 新闻或吐槽的ID
+	 * @param {Object} type : 新闻还是吐槽
+	 */
+	submitComment:function(comment, target, type){
+		return request.post(
+			Constants.API.NEWS.SUBMIT_COMMENT,
+			{comment: comment, type: type, target:target},
+			{}
+		)
 	},
     /**
      * 根据 id 来定位数组中的 item
