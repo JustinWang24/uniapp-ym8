@@ -272,7 +272,7 @@ page{
 		justify-content: center;
 		align-items: center;
 		width: 100%;
-		padding-top: 60px;
+		padding-top: 40px;
 		text{
 			font-size: 24px;
 			color: $mk-base-color;

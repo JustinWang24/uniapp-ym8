@@ -42,6 +42,7 @@ export default {
 		NEWS:{
 			SEARCH:'/api/trends/search-news',
 			LOAD_CONTENT:'/api/trends/load-content',
+			SUBMIT_COMMENT:'/api/trends/submit-comment',
 		}
 	},
 }

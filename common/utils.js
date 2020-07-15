@@ -76,6 +76,19 @@ export default {
 			{},
 		);
 	},
+	// 发表评论
+	/**
+	 * @param {Object} comemnt
+	 * @param {Object} target : 新闻或吐槽的ID
+	 * @param {Object} type : 新闻还是吐槽
+	 */
+	submitComment:function(comment, target, type){
+		return request.post(
+			Constants.API.NEWS.SUBMIT_COMMENT,
+			{comment: comment, type: type, target:target},
+			{}
+		)
+	},
     /**
      * 根据 id 来定位数组中的 item
      * @param id
