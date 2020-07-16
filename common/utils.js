@@ -89,6 +89,20 @@ export default {
 			{}
 		)
 	},
+	thumbUpTopic: function(topicUuid){
+		return request.post(
+			Constants.API.TOPIC.THUMB_UP_COMMENT,
+			{id: topicUuid, type: 'topic'},
+			{}
+		)
+	},
+	watchTopic: function(topicUuid){
+		return request.post(
+			Constants.API.TOPIC.WATCH_TOPIC,
+			{id: topicUuid, type: 'topic'},
+			{}
+		)
+	},
     /**
      * 根据 id 来定位数组中的 item
      * @param id

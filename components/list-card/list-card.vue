@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 基础卡片 -->
-		<view class="card" @click="onItemClicked">
+		<view class="card" @click="onItemClicked" v-if="cardType === 'news'">
 			<view class="thumbnail">
 				<image :src="item.picture" mode="aspectFill"></image>
 			</view>
@@ -17,6 +17,23 @@
 						<!-- 关注按钮组件 -->
 						<like-button :item="item"></like-button>
 					</view>
+				</view>
+			</view>
+		</view>
+		<!-- 话题的卡片 -->
+		<view class="card big-image" v-if="cardType !== 'news'" @click="onTopicClicked">
+			<view class="thumbnail" v-if="item.picture">
+				<image src="../../static/logo.png" mode="aspectFill"></image>
+			</view>
+			<view class="content">
+				<view class="title">
+					<text>{{ item.title }}</text>
+				</view>
+				<view class="snippet">
+					<view class="tag">
+						<view class="tag-txt" v-for="(tagText,idx) in item.tags" :key="item.id+'_'+idx">{{tagText}}</view>
+					</view>
+					<view class="views-count">{{ item.views }}浏览</view>
 				</view>
 			</view>
 		</view>
@@ -75,6 +92,11 @@
 				}
 			}
 		},
+		computed:{
+			cardType:function(){
+				return this.type.indexOf('news') > -1 ? 'news' : 'topic';
+			}
+		},
 		data() {
 			return {
 				
@@ -82,8 +104,18 @@
 		},
 		methods: {
 			onItemClicked: function(){
-				// console.log('打开新闻的详情', this.item);
 				this.$emit('card-clicked',{item: this.item});
+			},
+			onTopicClicked: function(){
+				// 当话题被点击
+				const theFakeItem = {
+					traffic: this.item.views,
+					up: this.item.thump_up,
+					id: this.item.uuid,
+					trend: this.item.tags.join(' '),
+					picture:''
+				};
+				this.$emit('card-clicked',{item: theFakeItem});
 			}
 		}
 	}

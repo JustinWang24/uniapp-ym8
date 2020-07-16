@@ -4,21 +4,26 @@
 			<text>{{ article.title }}</text>
 		</view>
 		<view class="header">
-			<view class="avatar">
+			<view class="avatar" v-if="isNews">
 				<image :src="article.picture" mode="aspectFill"></image>
 			</view>
 			<view class="header-content">
 				<view class="author">{{ article.trend }}</view>
 				<view class="info">
-					<text>已关注: {{ article.traffic }}+</text>
-					<text>赞: {{ article.up }}</text>
+					<text v-if="isNews">
+						浏览量: {{ article.traffic }}+
+					</text>
+					<text v-if="!isNews">
+						已关注: {{ article.watches }}
+					</text>
+					<text v-if="!isNews">赞同: {{ article.thumb_up }}</text>
 				</view>
 				<view></view>
 			</view>
 		</view>
 		<view class="content">
 			<u-parse :content="article.content" :noData="noData"></u-parse>
-			<view class="comments-wrap" v-if="comments.length > 0">
+			<view class="comments-wrap" v-if="comments && comments.length > 0">
 				<view class="comments-title">
 					<text style="color: #007AFF;">最新评论</text>
 				</view>
@@ -28,7 +33,6 @@
 			</view>
 		</view>
 		
-		
 		<view class="toolbar">
 			<view class="input-box" @click.stop="onComment">
 				<text>发表评论</text>
@@ -36,10 +40,10 @@
 			</view>
 			<view class="icons-wrap" v-if="!isNews">
 				<view class="icons-box" @click.stop="likeThis">
-					<uni-icons type="heart" size="20" color="#f07373"></uni-icons>
+					<uni-icons :type="topicWatched ? 'heart-filled' : 'heart'" size="20" color="#f07373" ></uni-icons>
 				</view>
 				<view class="icons-box" @click.stop="thumbUpThis">
-					<uni-icons type="hand-thumbsup" size="20" color="#f07373"></uni-icons>
+					<uni-icons :type="topicLiked ? 'hand-thumbsup-filled' : 'hand-thumbsup'" size="20" color="#f07373"></uni-icons>
 				</view>
 			</view>
 		</view>
@@ -60,6 +64,7 @@
 
 <script>
 	import Util from '../../common/utils.js';
+	import {mapGetters} from 'vuex';
 	import uParse from '@/components/gaoyia-parse/parse.vue';
 	
 	export default {
@@ -68,10 +73,15 @@
 		},
 		data() {
 			return {
-				article:{},
+				article:{
+					thumb_up: 0,
+					watches: 0,
+				},
 				noData:'<p style="text-align:center;color:#666;">详情加载中 ...</p>',
 				comments:[],
 				comment:'', // 输入的评论内容
+				topicWatched: false,
+				topicLiked: false,
 			};
 		},
 		onReady() {
@@ -83,10 +93,15 @@
 			const params = JSON.parse(query.params);
 			params.title = '';
 			params.content = '';
-			this.article = params;
+			const keys = Object.keys(params);
+			keys.forEach(key => {
+				this.article[key] = params[key];
+			})
+			
 			this.loadItemContent();
 		},
 		computed: {
+			...mapGetters(['currentUser']),
 			isNews: function(){
 				return this.article.type.indexOf('news') > -1;
 			}
@@ -96,6 +111,8 @@
 				Util.getContentById(this.article.id, this.article.type).then(res => {
 					if(Util.isAjaxResOk(res)){
 						this.article.title = res.data.item.title;
+						this.article.thumb_up = res.data.item.thumb_up; // 赞同数
+						this.article.watches = res.data.item.watches; // 赞同数
 						this.article.content = '<div>' + res.data.item.content + '</div>';
 						setTimeout((e)=>{
 							this.comments = res.data.item.comments;
@@ -130,6 +147,7 @@
 						const theComment = res.data.item;
 						theComment.u_name = '我';
 						this.comments.unshift(theComment);
+						this.comment = '';
 					} else {
 						uni.showToast({
 							title:res.message
@@ -138,10 +156,47 @@
 				});
 			},
 			likeThis: function(){
-				
+				if(Util.isEmpty(this.currentUser.uuid)){
+					uni.showToast({
+						title:'请先登录'
+					});
+					return;
+				}
+				if(!this.topicWatched){
+					this.topicWatched = true;
+					// 关注，成为发布者的朋友
+					Util.watchTopic(this.article.id).then(res => {
+						if(Util.isAjaxResOk(res)){
+							uni.showToast({
+								title:'谢谢关注'
+							});
+							this.article.watches++;
+						} else {
+							uni.showToast({
+								title:res.message
+							});
+						}
+					});
+				}
 			},
 			thumbUpThis: function(){
-				
+				// 点赞
+				if(this.topicLiked){
+					return;
+				}
+				this.topicLiked = true;
+				Util.thumbUpTopic(this.article.id).then(res => {
+					if(Util.isAjaxResOk(res)){
+						uni.showToast({
+							title:'谢谢点赞'
+						});
+						this.article.thumb_up++;
+					} else {
+						uni.showToast({
+							title:res.message
+						});
+					}
+				});
 			}
 		}
 	}
@@ -185,12 +240,16 @@
 			padding-left: 10px;
 			.author{
 				font-size: 14px;
-				color: #333;
+				color: $mk-base-color;
 			}
 			.info{
 				color: #999;
 				text{
 					padding-right: 5px;
+				}
+				.highlight{
+					color: $mk-base-color;
+					font-weight: bold;
 				}
 			}
 		}

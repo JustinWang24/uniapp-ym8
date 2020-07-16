@@ -98,6 +98,7 @@
 	flex: 1;
 	box-sizing: border-box;
 	overflow: hidden;
+	height: 100%;
 	.scroll-view-wrap{
 		height: 100%;
 		display: flex;

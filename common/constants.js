@@ -29,11 +29,11 @@ export default {
 			QUERY: '/business-query',
 		},
 		TOPIC:{
-			SUBMIT:'/submit-topic',
-			SUBMIT_COMMENT:'/submit-comment',
-			THUMB_UP_COMMENT:'/thumb-up',
-			WATCH_USER:'/watch-user',
-			WATCH_TOPIC:'/watch-topic',
+			SUBMIT:'/api/topics/submit-topic',
+			SUBMIT_COMMENT:'submit-comment', // 可匿名评论，所以没有带api
+			THUMB_UP_COMMENT:'/api/topics/thumb-up',
+			WATCH_USER:'/api/topics/watch-user',
+			WATCH_TOPIC:'/api/topics/watch-topic',
 		},
 		TAGS:{
 			GET_ALL:'/api/trends/get-tags',
