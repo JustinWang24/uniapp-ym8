@@ -28,6 +28,12 @@
             "path" : "pages/home-detail/home-detail",
             "style" : {}
         }
+        ,{
+            "path" : "pages/home-profile/home-profile",
+            "style" : {
+				"navigationBarTitleText": "我的个人信息"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

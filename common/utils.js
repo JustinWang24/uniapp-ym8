@@ -2,6 +2,9 @@ import Constants from './constants.js';
 import request from './request.js';
 
 export default {
+	getBaseUrl: function(){
+		return Constants.BASE_URL;
+	},
 	// 根据指定的给定的tag获取列表项
 	getTagItems: function(tag, options){
 		return request.get(Constants.API.TAGS.GET_BY_TAG_NAME, {name: tag}, options);
@@ -102,6 +105,39 @@ export default {
 			{id: topicUuid, type: 'topic'},
 			{}
 		)
+	},
+	myTopics: function(pageIndex,fIndex){
+		return request.get(
+			Constants.API.TOPIC.MY_TOPICS,
+			{index: pageIndex, index_f: fIndex},
+			{}
+		)
+	},
+	// 将新闻或者话题展示详情时，通过这个方法来创建一个对象
+	buildParamsForHomeDetailPageUrl: function(payload){
+		const params = {
+			id: payload.item.id,
+			picture: payload.item.picture,
+			traffic: payload.item.traffic,
+			trend: payload.item.trend,
+			type: payload.type
+		}
+		return Constants.PAGE.HOME_DETAIL + JSON.stringify(params);
+	},
+	buildParamsForHomeProfilePageUrl: function(params){
+		return Constants.PAGE.HOME_PROFILE;
+	},
+	// 用户上传图片的url
+	buildImageUploadUrl: function(){
+		return this.getBaseUrl() + Constants.API.USER.UPLOAD_PROFILE;
+	},
+	// 用户更新自己档案的
+	updateMyProfile: function(profile){
+		return request.post(
+			Constants.API.USER.UPLOAD_PROFILE,
+			profile,
+			{}
+		);
 	},
     /**
      * 根据 id 来定位数组中的 item

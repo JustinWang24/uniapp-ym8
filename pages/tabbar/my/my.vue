@@ -3,12 +3,12 @@
 		<view v-if="isLoggedIn">
 			<view class="my-header">
 				<view class="header-bg">
-					<image src="../../../static/logo.png" mode="aspectFill"></image>
+					<image :src="currentUser.avatar ? currentUser.avatar : '../../../static/logo.png'" mode="aspectFill"></image>
 				</view>
 				
 				<view class="avatar-wrap">
 					<view class="avatar">
-						<image src="../../../static/logo.png" mode="aspectFill"></image>
+						<image :src="currentUser.avatar ? currentUser.avatar : '../../../static/logo.png'" mode="aspectFill"></image>
 					</view>
 					<text class="name-txt">{{ currentUser.name }}</text>
 				</view>
@@ -26,17 +26,24 @@
 			</view>
 			
 			<view class="my-content">
-				<view class="content-list">
+				<view class="content-list" @click="openMyProfile">
 					<view class="title">
 						<uni-icons class="icon" color="#666" type="contact" size="16px"></uni-icons>
-						<text>我的吐槽</text>
+						<text>我的个人资料</text>
 					</view>
 					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
 				</view>
 				<view class="content-list">
 					<view class="title">
-						<uni-icons class="icon" color="#666" type="help" size="16px"></uni-icons>
-						<text>我的关注</text>
+						<uni-icons class="icon" color="#666" type="bars" size="16px"></uni-icons>
+						<text>我的吐槽历史</text>
+					</view>
+					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
+				</view>
+				<view class="content-list">
+					<view class="title">
+						<uni-icons class="icon" color="#666" type="email" size="16px"></uni-icons>
+						<text>查看我的私信</text>
 					</view>
 					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
 				</view>
@@ -133,11 +140,10 @@
 				Util.login(this.loginForm.email, this.loginForm.password).then(res => {
 					if(Util.isAjaxResOk(res)){
 						// 登录成功
-						const profile = {
-							uuid: res.data.profile.id,
-							name: res.data.profile.name,
-						};
-						this.$store.dispatch('set_user_profile',profile);
+						this.$store.dispatch(
+							'set_user_profile',
+							this._prepareProfileObject(res.data.profile)
+						);
 						uni.showToast({
 							title: '登录成功'
 						})
@@ -156,11 +162,10 @@
 				Util.signUp(this.signUpForm).then(res => {
 					if(Util.isAjaxResOk(res)){
 						// 注册成功
-						const profile = {
-							uuid: res.data.profile.id,
-							name: res.data.profile.name,
-						};
-						this.$store.dispatch('set_user_profile',profile);
+						this.$store.dispatch(
+							'set_user_profile',
+							this._prepareProfileObject(res.data.profile)
+						);
 						uni.showToast({
 							title: '注册成功'
 						})
@@ -177,6 +182,22 @@
 			_resetLoginForm: function(){
 				this.loginForm.email = '';
 				this.loginForm.password = '';
+			},
+			// 打开个人资料页
+			openMyProfile: function(){
+				uni.navigateTo({
+					url: Util.buildParamsForHomeProfilePageUrl()
+				})
+			},
+			_prepareProfileObject: function(p){
+				const profile = {
+					uuid: p.id
+				};
+				const keys = Object.keys(p);
+				keys.forEach(key => {
+					profile[key] = p[key];
+				});
+				return profile;
 			}
 		}
 	}

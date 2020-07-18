@@ -21,7 +21,7 @@
 			</view>
 		</view>
 		<!-- 话题的卡片 -->
-		<view class="card big-image" v-if="cardType !== 'news'" @click="onTopicClicked">
+		<view class="card big-image" v-if="cardType === 'topic'" @click="onTopicClicked">
 			<view class="thumbnail" v-if="item.picture">
 				<image src="../../static/logo.png" mode="aspectFill"></image>
 			</view>
@@ -34,6 +34,25 @@
 						<view class="tag-txt" v-for="(tagText,idx) in item.tags" :key="item.id+'_'+idx">{{tagText}}</view>
 					</view>
 					<view class="views-count">{{ item.views }}浏览</view>
+				</view>
+			</view>
+		</view>
+		
+		<!-- 用户的卡片 -->
+		<view class="card person" v-if="cardType === 'person'" @click="onPersonClicked">
+			<view class="thumbnail" v-if="item.picture || true">
+				<image src="../../static/logo.png" mode="aspectFill"></image>
+			</view>
+			<view class="content">
+				<view class="title">
+					<text>{{ item.name }}</text>
+				</view>
+				<view class="last-topic">
+					<view class="piece-title">{{ item.t_title }}</view>
+					<view class="piece-icons">
+						<view class="piece"><uni-icons type="heart" color="#999" size="14px"></uni-icons> {{ item.t_views }}</view>
+						<view class="piece"><uni-icons type="hand-thumbsdown" color="#999" size="14"></uni-icons> {{ item.t_thumb_up }}</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -94,7 +113,14 @@
 		},
 		computed:{
 			cardType:function(){
-				return this.type.indexOf('news') > -1 ? 'news' : 'topic';
+				if(this.type.indexOf('news') > -1) {
+					return 'news';
+				} else if(this.type.indexOf('topic') > -1){
+					return 'topic';
+				} else if(this.type === 'person'){
+					return 'person';
+				}
+				
 			}
 		},
 		data() {
@@ -110,12 +136,15 @@
 				// 当话题被点击
 				const theFakeItem = {
 					traffic: this.item.views,
-					up: this.item.thump_up,
+					up: this.item.thumb_up,
 					id: this.item.uuid,
 					trend: this.item.tags.join(' '),
 					picture:''
 				};
 				this.$emit('card-clicked',{item: theFakeItem});
+			},
+			onPersonClicked: function(){
+				console.log(this.item);
 			}
 		}
 	}
@@ -183,6 +212,29 @@
 		}
 		.desc{
 			
+		}
+	}
+	
+	&.person{
+		.content{
+			.title{
+				font-size: 16px;
+				font-weight: bold;
+			}
+			.last-topic{
+				font-size: 13px;
+				color: #999;
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				.piece-icons{
+					display: flex;
+					justify-content: end;
+					.piece{
+						margin-left: 5px;
+					}
+				}
+			}
 		}
 	}
 

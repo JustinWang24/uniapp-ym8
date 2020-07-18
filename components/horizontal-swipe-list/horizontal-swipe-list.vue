@@ -47,15 +47,8 @@
 				this.$emit('tag-changed',{newIndex: e.detail.current});
 			},
 			onCardListItemClicked: function(payload){
-				const params = {
-					id: payload.item.id,
-					picture: payload.item.picture,
-					traffic: payload.item.traffic,
-					trend: payload.item.trend,
-					type: payload.type
-				}
 				uni.navigateTo({
-					url:'/pages/home-detail/home-detail?params=' + JSON.stringify(params)
+					url: Util.buildParamsForHomeDetailPageUrl(payload)
 				});
 			}
 		}

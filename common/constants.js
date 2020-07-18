@@ -7,6 +7,8 @@ export default {
 	AJAX_ERROR: 99,
 	PAGE_SIZE: 10,
 	FAKE_UUID:'fake',
+	MAX_FILE_UPLOADS_COUNT: 1,
+	BASE_URL: 'http://yiminbar.test',
 	API: {
 		USER:{
 			LOGIN:'/api/profile/login',
@@ -17,6 +19,7 @@ export default {
 			GET_NOTIFICATIONS:'/api/user/get-notifications',
 			GET_NEW_NOTIFICATIONS:'/api/user/get-new-notifications',
 			GET_OLD_NOTIFICATIONS:'/api/user/get-old-notifications',
+			UPLOAD_PROFILE:'/api/profile/update'
 		},
 		WYSIWYG: {
 			LOAD_SHORTCODE:'/api/wysiwyg/shortcode/load',
@@ -34,6 +37,7 @@ export default {
 			THUMB_UP_COMMENT:'/api/topics/thumb-up',
 			WATCH_USER:'/api/topics/watch-user',
 			WATCH_TOPIC:'/api/topics/watch-topic',
+			MY_TOPICS:'/api/topics/my-topics',
 		},
 		TAGS:{
 			GET_ALL:'/api/trends/get-tags',
@@ -45,4 +49,8 @@ export default {
 			SUBMIT_COMMENT:'/api/trends/submit-comment',
 		}
 	},
+	PAGE:{
+		HOME_DETAIL: '/pages/home-detail/home-detail?params=',
+		HOME_PROFILE: '/pages/home-profile/home-profile',
+	}
 }
