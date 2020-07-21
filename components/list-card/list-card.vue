@@ -40,8 +40,8 @@
 		
 		<!-- 用户的卡片 -->
 		<view class="card person" v-if="cardType === 'person'" @click="onPersonClicked">
-			<view class="thumbnail" v-if="item.picture || true">
-				<image src="../../static/logo.png" mode="aspectFill"></image>
+			<view class="thumbnail" v-if="item.picture">
+				<image :src="item.picture" mode="aspectFill"></image>
 			</view>
 			<view class="content">
 				<view class="title">
@@ -144,7 +144,7 @@
 				this.$emit('card-clicked',{item: theFakeItem});
 			},
 			onPersonClicked: function(){
-				console.log(this.item);
+				this.$emit('person-clicked',{item: this.item});
 			}
 		}
 	}

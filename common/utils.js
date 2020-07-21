@@ -124,6 +124,18 @@ export default {
 		}
 		return Constants.PAGE.HOME_DETAIL + JSON.stringify(params);
 	},
+	// 查看朋友的个人主页
+	buildParamsForFriendDetailPageUrl: function(payload){
+		const params = {
+			id: payload.item.id,
+			uuid: payload.item.id,
+			picture: payload.item.picture,
+			name: payload.item.name,
+			type: 'person'
+		}
+		return Constants.PAGE.HOME_PERSON + JSON.stringify(params);
+	},
+	// 查看自己的个人主页
 	buildParamsForHomeProfilePageUrl: function(params){
 		return Constants.PAGE.HOME_PROFILE;
 	},

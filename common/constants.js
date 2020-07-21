@@ -50,7 +50,8 @@ export default {
 		}
 	},
 	PAGE:{
-		HOME_DETAIL: '/pages/home-detail/home-detail?params=',
-		HOME_PROFILE: '/pages/home-profile/home-profile',
+		HOME_DETAIL: '/pages/home-detail/home-detail?params=', // 查看文章的内容的页面
+		HOME_PERSON: '/pages/home-person/home-person?params=', // 查看别人的资料的页面
+		HOME_PROFILE: '/pages/home-profile/home-profile', // 用户自己的资料页面
 	}
 }

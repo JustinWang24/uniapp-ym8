@@ -148,6 +148,7 @@
 							title: '登录成功'
 						})
 						this.isLoggedIn = true;
+						this.loadMyTopicsAndFriends();
 					} else {
 						// 登录失败
 						uni.showToast({
@@ -198,7 +199,51 @@
 					profile[key] = p[key];
 				});
 				return profile;
-			}
+			},
+			loadMyTopicsAndFriends: function(){
+				// 登录成功之后, 去加载我关注的话题和我的朋友列表的第一页数据
+				Util.myTopics(0, 0).then(res => {
+					if(Util.isAjaxResOk(res)){
+						const theTopics = [];
+						res.data.items.forEach((t)=>{
+							const tpc = {};
+							tpc.id = t.id;
+							tpc.uuid = t.uuid;
+							tpc.views = t.views;
+							tpc.thumb_up = t.thumb_up;
+							tpc.title = t.title;
+							tpc.tags = JSON.parse(t.tags);
+							theTopics.push(tpc);
+						});
+						this.$store.dispatch(
+							'set_my_topics',
+							theTopics
+						);
+						
+						const theFriends = [];
+						res.data.friends.forEach((t)=>{
+							const tpc = {};
+							tpc.id = t.id;
+							tpc.uuid = t.uuid;
+							tpc.name = t.name;
+							tpc.picture = t.picture;
+							// 朋友的最新的帖子
+							tpc.t_title = t.t_title;
+							tpc.t_views = t.t_views;
+							tpc.t_thumb_up = t.t_thumb_up;
+							tpc.t_uuid = t.t_uuid;
+							theFriends.push(tpc);
+						});
+						this.$store.dispatch(
+							'set_my_friends',
+							theFriends
+						);
+					}
+					this.loadingTopics = false;
+				}).catch(e => {
+					this.loadingTopics = false;
+				});
+			},
 		}
 	}
 </script>

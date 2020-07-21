@@ -8,7 +8,7 @@
 					<text class="label-clear" @click="clearHistory">清空</text>
 				</view>
 				<view class="label-content" v-if="historyList.length > 0">
-					<view @click="onSearchHistoryItemClicked(item.name)" class="label-item" v-for="item in historyList">{{ item.name }}</view>
+					<view @click="onSearchHistoryItemClicked(item.name)" class="label-item" v-for="(item, idx) in historyList" :key="idx">{{ item.name }}</view>
 				</view>
 				<view v-if="historyList.length === 0" class="no-data">没有找到搜索历史记录</view>
 			</view>
