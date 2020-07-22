@@ -47,16 +47,16 @@
 				this.$emit('tag-changed',{newIndex: e.detail.current});
 			},
 			onCardListItemClicked: function(payload){
-				const params = {
-					id: payload.item.id,
-					picture: payload.item.picture,
-					traffic: payload.item.traffic,
-					trend: payload.item.trend,
-					type: payload.type
+				if(payload.type === 'product'){
+					console.log(payload.item.id)
+					uni.navigateTo({
+						url: Util.buildParamsForViewProductPageUrl(payload.item.id)
+					});
+				} else {
+					uni.navigateTo({
+						url: Util.buildParamsForHomeDetailPageUrl(payload)
+					});
 				}
-				uni.navigateTo({
-					url:'/pages/home-detail/home-detail?params=' + JSON.stringify(params)
-				});
 			}
 		}
 	}

@@ -1,14 +1,15 @@
 import $store from '../store/index.js';
+import Constants from './constants.js';
 
 export default {
 	// 全局配置
 	common:{
 		// #ifndef H5
 		// baseUrl:"https://ym8.com.au/api/",
-		baseUrl:"http://yiminbar.test",
+		baseUrl: Constants.BASE_URL,
 		// #endif
 		// #ifdef H5
-		baseUrl:"http://yiminbar.test",
+		baseUrl:Constants.BASE_URL,
 		// #endif
 		header:{
 			'Content-Type':'application/json;charset=UTF-8',

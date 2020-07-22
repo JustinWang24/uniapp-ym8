@@ -2,15 +2,15 @@
 	<view class="follow">
 		<view class="follow-tab">
 			<view class="box">
-				<view @click="tabClicked(1)" class="follow-item" :class="{active:activeIndex === 1}">话题</view>
-				<view @click="tabClicked(2)" class="follow-item" :class="{active:activeIndex === 2}">好友</view>
+				<view @click="tabClicked(0)" class="follow-item" :class="{active:activeIndex === 0}">话题</view>
+				<view @click="tabClicked(1)" class="follow-item" :class="{active:activeIndex === 1}">好友</view>
 			</view>
 		</view>
 		<view class="followed-list">
-			<swiper class="followed-list-wrap">
+			<swiper class="followed-list-wrap" @change="onSwiperChange" :current="activeIndex">
 				<swiper-item>
 					<view class="swiper-item">
-						<list-scroll :theTag="myTopic" @card-list-item-clicked="onTopicListItemClicked">
+						<list-scroll :theTag="myTopics" @card-list-item-clicked="onTopicListItemClicked">
 							
 						</list-scroll>
 					</view>
@@ -28,18 +28,32 @@
 </template>
 
 <script>
+	import Util from '../../../common/utils.js';
+	import {mapGetters} from 'vuex';
+	
 	export default {
+		computed:{
+			...mapGetters(['currentUser','myTopics','myGroup']),
+			isLoggedIn: function(){
+				return this.currentUser.uuid !== undefined;
+			}
+		},
+		onLoad(){
+			if(this.isLoggedIn && this.isForceLoadingData && this.myTopics.items.length === 0 && this.myGroup.items.length === 0){
+				// 表示有可能还没有加载, 因此尝试从服务器获取一次, 但只有一次
+				this.isForceLoadingData = false;
+				this.loadMyTopicsAndFriends();
+			}
+		},
 		data() {
 			return {
-				activeIndex: 1,
-				myTopic:{
-					type:'topic',
-					items:[]
-				},
-				myGroup:{
-					type:'person',
-					items:[]
-				}
+				activeIndex: 0,
+				myGroupIndex: 0,
+				loadingGroup: false,
+				myTopicsIndex: 0,
+				loadingTopics: false,
+				// 是否当前是登录状态
+				isForceLoadingData: true,
 			}
 		},
 		methods: {
@@ -47,10 +61,61 @@
 				this.activeIndex = idx;
 			},
 			onTopicListItemClicked: function(payload){
-				
+				uni.navigateTo({
+					url: Util.buildParamsForHomeDetailPageUrl(payload)
+				});
 			},
 			onGroupListItemClicked: function(payload){
-				
+				uni.navigateTo({
+					url: Util.buildParamsForFriendDetailPageUrl(payload)
+				});
+			},
+			loadMyTopicsAndFriends: function(){
+				this.loadingTopics = true;
+				Util.myTopics(this.myTopicsIndex, this.myGroupIndex).then(res => {
+					if(Util.isAjaxResOk(res)){
+						this.myTopicsIndex++;
+						const theTopics = [];
+						res.data.items.forEach((t)=>{
+							const tpc = {};
+							tpc.id = t.id;
+							tpc.uuid = t.uuid;
+							tpc.views = t.views;
+							tpc.thumb_up = t.thumb_up;
+							tpc.title = t.title;
+							tpc.tags = JSON.parse(t.tags);
+							theTopics.push(tpc);
+						});
+						this.$store.dispatch(
+							'set_my_topics',
+							theTopics
+						);
+						const theFriends = [];
+						res.data.friends.forEach((t)=>{
+							const tpc = {};
+							tpc.id = t.id;
+							tpc.uuid = t.uuid;
+							tpc.name = t.name;
+							tpc.picture = t.picture;
+							// 朋友的最新的帖子
+							tpc.t_title = t.t_title;
+							tpc.t_views = t.t_views;
+							tpc.t_thumb_up = t.t_thumb_up;
+							tpc.t_uuid = t.t_uuid;
+							theFriends.push(tpc);
+						});
+						this.$store.dispatch(
+							'set_my_friends',
+							theFriends
+						);
+					}
+					this.loadingTopics = false;
+				}).catch(e => {
+					this.loadingTopics = false;
+				});
+			},
+			onSwiperChange: function(e){
+				this.activeIndex = e.detail.current;
 			}
 		}
 	}
@@ -88,7 +153,8 @@ page{
 					border-right: solid 1px $mk-base-color;
 				}
 				&.active{
-					color: $mk-base-color;
+					background-color: $mk-base-color;
+					color: white;
 				}
 			}
 		}
@@ -98,9 +164,6 @@ page{
 		flex: 1;
 		.followed-list-wrap{
 			height: 100%;
-			.swiper-item{
-				
-			}
 		}
 	}
 }

@@ -3,12 +3,12 @@
 		<view v-if="isLoggedIn">
 			<view class="my-header">
 				<view class="header-bg">
-					<image src="../../../static/logo.png" mode="aspectFill"></image>
+					<image :src="currentUser.avatar ? currentUser.avatar : '../../../static/logo.png'" mode="aspectFill"></image>
 				</view>
 				
 				<view class="avatar-wrap">
 					<view class="avatar">
-						<image src="../../../static/logo.png" mode="aspectFill"></image>
+						<image :src="currentUser.avatar ? currentUser.avatar : '../../../static/logo.png'" mode="aspectFill"></image>
 					</view>
 					<text class="name-txt">{{ currentUser.name }}</text>
 				</view>
@@ -26,17 +26,31 @@
 			</view>
 			
 			<view class="my-content">
-				<view class="content-list">
+				<view class="content-list" @click="openMyProfile">
 					<view class="title">
 						<uni-icons class="icon" color="#666" type="contact" size="16px"></uni-icons>
-						<text>我的吐槽</text>
+						<text>我的个人资料</text>
+					</view>
+					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
+				</view>
+				<view class="content-list" @click="openMyShop">
+					<view class="title">
+						<uni-icons class="icon" color="#666" type="shop" size="16px"></uni-icons>
+						<text>我的二手商店</text>
 					</view>
 					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
 				</view>
 				<view class="content-list">
 					<view class="title">
-						<uni-icons class="icon" color="#666" type="help" size="16px"></uni-icons>
-						<text>我的关注</text>
+						<uni-icons class="icon" color="#666" type="bars" size="16px"></uni-icons>
+						<text>我的吐槽历史</text>
+					</view>
+					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
+				</view>
+				<view class="content-list">
+					<view class="title">
+						<uni-icons class="icon" color="#666" type="email" size="16px"></uni-icons>
+						<text>查看我的私信</text>
 					</view>
 					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
 				</view>
@@ -133,15 +147,15 @@
 				Util.login(this.loginForm.email, this.loginForm.password).then(res => {
 					if(Util.isAjaxResOk(res)){
 						// 登录成功
-						const profile = {
-							uuid: res.data.profile.id,
-							name: res.data.profile.name,
-						};
-						this.$store.dispatch('set_user_profile',profile);
+						this.$store.dispatch(
+							'set_user_profile',
+							this._prepareProfileObject(res.data.profile)
+						);
 						uni.showToast({
 							title: '登录成功'
 						})
 						this.isLoggedIn = true;
+						this.loadMyTopicsAndFriends();
 					} else {
 						// 登录失败
 						uni.showToast({
@@ -156,11 +170,10 @@
 				Util.signUp(this.signUpForm).then(res => {
 					if(Util.isAjaxResOk(res)){
 						// 注册成功
-						const profile = {
-							uuid: res.data.profile.id,
-							name: res.data.profile.name,
-						};
-						this.$store.dispatch('set_user_profile',profile);
+						this.$store.dispatch(
+							'set_user_profile',
+							this._prepareProfileObject(res.data.profile)
+						);
 						uni.showToast({
 							title: '注册成功'
 						})
@@ -177,7 +190,78 @@
 			_resetLoginForm: function(){
 				this.loginForm.email = '';
 				this.loginForm.password = '';
-			}
+			},
+			// 打开个人资料页
+			openMyProfile: function(){
+				uni.navigateTo({
+					url: Util.buildParamsForHomeProfilePageUrl()
+				})
+			},
+			// 打开我的二手店页面
+			openMyShop: function(){
+				// 先把店主设置为自己
+				this.$store.dispatch(
+					'set_current_shop_owner_uuid',
+					this.currentUser.uuid
+				);
+				uni.navigateTo({
+					url: Util.buildParamsForHomeProductsPageUrl()
+				})
+			},
+			_prepareProfileObject: function(p){
+				const profile = {
+					uuid: p.id
+				};
+				const keys = Object.keys(p);
+				keys.forEach(key => {
+					profile[key] = p[key];
+				});
+				return profile;
+			},
+			loadMyTopicsAndFriends: function(){
+				// 登录成功之后, 去加载我关注的话题和我的朋友列表的第一页数据
+				Util.myTopics(0, 0).then(res => {
+					if(Util.isAjaxResOk(res)){
+						const theTopics = [];
+						res.data.items.forEach((t)=>{
+							const tpc = {};
+							tpc.id = t.id;
+							tpc.uuid = t.uuid;
+							tpc.views = t.views;
+							tpc.thumb_up = t.thumb_up;
+							tpc.title = t.title;
+							tpc.tags = JSON.parse(t.tags);
+							theTopics.push(tpc);
+						});
+						this.$store.dispatch(
+							'set_my_topics',
+							theTopics
+						);
+						
+						const theFriends = [];
+						res.data.friends.forEach((t)=>{
+							const tpc = {};
+							tpc.id = t.id;
+							tpc.uuid = t.uuid;
+							tpc.name = t.name;
+							tpc.picture = t.picture;
+							// 朋友的最新的帖子
+							tpc.t_title = t.t_title;
+							tpc.t_views = t.t_views;
+							tpc.t_thumb_up = t.t_thumb_up;
+							tpc.t_uuid = t.t_uuid;
+							theFriends.push(tpc);
+						});
+						this.$store.dispatch(
+							'set_my_friends',
+							theFriends
+						);
+					}
+					this.loadingTopics = false;
+				}).catch(e => {
+					this.loadingTopics = false;
+				});
+			},
 		}
 	}
 </script>

@@ -15,6 +15,8 @@
 					:type="theLocalTag.type" 
 					:item="item"
 					@card-clicked="onCardClicked"
+					@person-clicked="onPersonClicked"
+					@product-clicked="onProductClicked"
 				></list-card>
 				<uni-load-more v-if="needLoadMore" iconType="snow" :status="loadMoreStatus"></uni-load-more>
 			</view>
@@ -88,6 +90,13 @@
 				// 在列表中，显示一些东西，表示该项目被点击过
 				// 再发布该事件: 表示该列表的类型, 例如新闻，话题，搜索结果等
 				this.$emit('card-list-item-clicked',{type:this.theTag.type, item: payload.item});
+			},
+			onPersonClicked: function(payload){
+				// 表示查看一个关注的人的个人资料
+				this.$emit('card-list-item-clicked',{type:'person', item: payload.item});
+			},
+			onProductClicked: function(payload) {
+				this.$emit('card-list-item-clicked',{type:'product', item: payload.item});
 			}
 		}
 	}

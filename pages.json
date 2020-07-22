@@ -28,6 +28,28 @@
             "path" : "pages/home-detail/home-detail",
             "style" : {}
         }
+        ,{
+            "path" : "pages/home-profile/home-profile",
+            "style" : {
+				"navigationBarTitleText": "我的个人信息"
+			}
+        }
+        ,{
+            "path" : "pages/home-person/home-person",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/home-products/home-products",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/manage-product/manage-product",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/view-product/view-product",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

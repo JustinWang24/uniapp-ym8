@@ -2,6 +2,9 @@ import Constants from './constants.js';
 import request from './request.js';
 
 export default {
+	getBaseUrl: function(){
+		return Constants.BASE_URL;
+	},
 	// 根据指定的给定的tag获取列表项
 	getTagItems: function(tag, options){
 		return request.get(Constants.API.TAGS.GET_BY_TAG_NAME, {name: tag}, options);
@@ -102,6 +105,105 @@ export default {
 			{id: topicUuid, type: 'topic'},
 			{}
 		)
+	},
+	myTopics: function(pageIndex,fIndex){
+		return request.get(
+			Constants.API.TOPIC.MY_TOPICS,
+			{index: pageIndex, index_f: fIndex},
+			{}
+		)
+	},
+	// 将新闻或者话题展示详情时，通过这个方法来创建一个对象
+	buildParamsForHomeDetailPageUrl: function(payload){
+		const params = {
+			id: payload.item.id,
+			picture: payload.item.picture,
+			traffic: payload.item.traffic,
+			trend: payload.item.trend,
+			type: payload.type
+		}
+		return Constants.PAGE.HOME_DETAIL + JSON.stringify(params);
+	},
+	// 查看朋友的个人主页
+	buildParamsForFriendDetailPageUrl: function(payload){
+		const params = {
+			id: payload.item.id,
+			uuid: payload.item.id,
+			picture: payload.item.picture,
+			name: payload.item.name,
+			type: 'person'
+		}
+		return Constants.PAGE.HOME_PERSON + JSON.stringify(params);
+	},
+	// 管理产品的页面
+	buildParamsForManageProductPageUrl: function(productId){
+		if(!productId){
+			productId = 0; // 如果没有传，就表示是创建产品, 那么赋值为0
+		}
+		return Constants.PAGE.MANAGE_PRODUCT + JSON.stringify({id: productId});
+	},
+	// 查看产品详情的页面
+	buildParamsForViewProductPageUrl: function(productId){
+		if(!productId){
+			return null; // 返回空, 无法跳转
+		}
+		return Constants.PAGE.VIEW_PRODUCT + JSON.stringify({id: productId});
+	},
+	// 查看自己的个人主页
+	buildParamsForHomeProfilePageUrl: function(){
+		return Constants.PAGE.HOME_PROFILE;
+	},
+	// 查看二手商店: 要传过来一个用户的id才行
+	buildParamsForHomeProductsPageUrl: function(){
+		return Constants.PAGE.HOME_SHOP;
+	},
+	// 用户上传图片的url
+	buildImageUploadUrl: function(){
+		return this.getBaseUrl() + Constants.API.USER.UPLOAD_PROFILE;
+	},
+	// 用户上传产品图片的url
+	buildProductImageUploadUrl: function(){
+		return this.getBaseUrl() + Constants.API.USER.UPLOAD_PRODUCT_IMAGE;
+	},
+	// 用户更新自己档案的
+	updateMyProfile: function(profile){
+		return request.post(
+			Constants.API.USER.UPLOAD_PROFILE,
+			profile,
+			{}
+		);
+	},
+	// 加载传入的用户为uuid的在售商品
+	loadProductsByUserUuid: function(uuid, currentPageIndex){
+		return request.post(
+			Constants.API.USER.LOAD_MY_PRODUCTS,
+			{uuid: uuid, index: currentPageIndex},
+			{}
+		);
+	},
+	// 用户保存产品
+	saveProductByUserUuid: function(product, images, ownerUuid){
+		return request.post(
+			Constants.API.USER.SAVE_MY_PRODUCT,
+			{product: product, ownerUuid: ownerUuid, images: images},
+			{}
+		);
+	},
+	// 加载产品的详情
+	loadProductById: function(id){
+		return request.get(
+			Constants.API.USER.LOAD_PRODUCT,
+			{id: id},
+			{}
+		);
+	},
+	// 删除产品
+	deleteProductById: function(id,userUuid){
+		return request.get(
+			Constants.API.USER.DELETED_PRODUCT,
+			{id: id, userUuid: userUuid},
+			{}
+		);
 	},
     /**
      * 根据 id 来定位数组中的 item
