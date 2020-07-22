@@ -142,6 +142,13 @@ export default {
 		}
 		return Constants.PAGE.MANAGE_PRODUCT + JSON.stringify({id: productId});
 	},
+	// 查看产品详情的页面
+	buildParamsForViewProductPageUrl: function(productId){
+		if(!productId){
+			return null; // 返回空, 无法跳转
+		}
+		return Constants.PAGE.VIEW_PRODUCT + JSON.stringify({id: productId});
+	},
 	// 查看自己的个人主页
 	buildParamsForHomeProfilePageUrl: function(){
 		return Constants.PAGE.HOME_PROFILE;
@@ -190,6 +197,7 @@ export default {
 			{}
 		);
 	},
+	// 删除产品
 	deleteProductById: function(id,userUuid){
 		return request.get(
 			Constants.API.USER.DELETED_PRODUCT,

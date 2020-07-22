@@ -98,7 +98,6 @@
 		},
 		methods:{
 			loadProduct: function(id){
-				console.log('Load product to manage', id);
 				Util.loadProductById(id).then(res => {
 					if(Util.isAjaxResOk(res)){
 						this.product.id = res.data.product.id;

@@ -97,7 +97,6 @@
 			keys.forEach(key => {
 				this.article[key] = params[key];
 			})
-			
 			this.loadItemContent();
 		},
 		computed: {

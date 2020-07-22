@@ -46,6 +46,10 @@
             "path" : "pages/manage-product/manage-product",
             "style" : {}
         }
+        ,{
+            "path" : "pages/view-product/view-product",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -47,9 +47,16 @@
 				this.$emit('tag-changed',{newIndex: e.detail.current});
 			},
 			onCardListItemClicked: function(payload){
-				uni.navigateTo({
-					url: Util.buildParamsForHomeDetailPageUrl(payload)
-				});
+				if(payload.type === 'product'){
+					console.log(payload.item.id)
+					uni.navigateTo({
+						url: Util.buildParamsForViewProductPageUrl(payload.item.id)
+					});
+				} else {
+					uni.navigateTo({
+						url: Util.buildParamsForHomeDetailPageUrl(payload)
+					});
+				}
 			}
 		}
 	}

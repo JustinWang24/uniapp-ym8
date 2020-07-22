@@ -60,5 +60,6 @@ export default {
 		HOME_PROFILE: '/pages/home-profile/home-profile', // 用户自己的资料页面
 		HOME_SHOP: '/pages/home-products/home-products', //  用户的产品列表
 		MANAGE_PRODUCT: '/pages/manage-product/manage-product?params=', // 管理产品页面
+		VIEW_PRODUCT: '/pages/view-product/view-product?params=', // 浏览产品的详情页面
 	}
 }
