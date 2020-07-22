@@ -19,6 +19,8 @@ const store = new Vuex.Store({
 			type:'person',
 			items:[]
 		},
+		// 当前正在浏览的商店的主人的uuid
+		currentShopOwnerUuid:null
 	},
 	mutations:{
 		SET_HISTORY_LIST(state, newHistoryList){
@@ -33,8 +35,14 @@ const store = new Vuex.Store({
 		SET_MY_GROUP(state, friends){
 			state.myGroup.items = friends;
 		},
+		SET_CURRENT_SHOP_OWNER_UUID(state, uuid){
+			state.currentShopOwnerUuid = uuid;
+		},
 	},
 	actions:{
+		set_current_shop_owner_uuid({commit, state}, uuid){
+			commit('SET_CURRENT_SHOP_OWNER_UUID', uuid);
+		},
 		set_history({commit, state}, historyItem){
 			let theList = state.historyList;
 			theList.unshift(historyItem);
@@ -120,6 +128,9 @@ const store = new Vuex.Store({
 		},
 		myGroup: state => {
 			return state.myGroup;
+		},
+		currentShopOwnerUuid: state => {
+			return state.currentShopOwnerUuid;
 		}
 	}
 })

@@ -33,6 +33,13 @@
 					</view>
 					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
 				</view>
+				<view class="content-list" @click="openMyShop">
+					<view class="title">
+						<uni-icons class="icon" color="#666" type="shop" size="16px"></uni-icons>
+						<text>我的二手商店</text>
+					</view>
+					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
+				</view>
 				<view class="content-list">
 					<view class="title">
 						<uni-icons class="icon" color="#666" type="bars" size="16px"></uni-icons>
@@ -188,6 +195,17 @@
 			openMyProfile: function(){
 				uni.navigateTo({
 					url: Util.buildParamsForHomeProfilePageUrl()
+				})
+			},
+			// 打开我的二手店页面
+			openMyShop: function(){
+				// 先把店主设置为自己
+				this.$store.dispatch(
+					'set_current_shop_owner_uuid',
+					this.currentUser.uuid
+				);
+				uni.navigateTo({
+					url: Util.buildParamsForHomeProductsPageUrl()
 				})
 			},
 			_prepareProfileObject: function(p){

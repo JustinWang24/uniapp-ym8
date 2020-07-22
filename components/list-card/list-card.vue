@@ -56,25 +56,30 @@
 				</view>
 			</view>
 		</view>
-		<!-- 多图模式的卡片 -->
-		<!-- <view class="card with-multi-images">
+		<!-- 产品的卡片 -->
+		<view class="card with-multi-images" v-if="cardType === 'product'" @click="onProductClicked">
 			<view class="content">
-				<view class="title">
-					<text>标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</text>
+				<view class="title product-title">
+					<view class="product-name">{{ item.name }}</view>
+					<view class="fineness">{{ finenessText }}</view>
 				</view>
 				<view class="thumbnail">
-					<view v-for="(img, index) in 3" :key="index" class="multi-img">
-						<image src="../../static/logo.png" mode="aspectFill"></image>
+					<view v-for="(img, index) in item.images" :key="index" v-if="index < 3" class="multi-img">
+						<image :src="img" mode="aspectFill"></image>
 					</view>
 				</view>
 				<view class="snippet">
 					<view class="tag">
-						<view class="tag-txt">澳洲新闻</view>
+						<view class="tag-txt">{{ item.location }}</view>
 					</view>
-					<view class="views-count">100浏览</view>
+					<view class="price-tag">
+						<text class="current">现价: ${{ item.price }}</text>
+						<text class="orig">原价:${{ item.full_price }}</text>
+					</view>
+					<view class="views-count">{{ item.views }}浏览</view>
 				</view>
 			</view>
-		</view> -->
+		</view>
 		<!-- 大图模式的卡片 -->
 		<!-- <view class="card big-image">
 			<view class="thumbnail">
@@ -115,12 +120,17 @@
 			cardType:function(){
 				if(this.type.indexOf('news') > -1) {
 					return 'news';
-				} else if(this.type.indexOf('topic') > -1){
-					return 'topic';
 				} else if(this.type === 'person'){
 					return 'person';
+				} else if(this.type === 'topic_buy') {
+					return 'product';
+				} else if(this.type.indexOf('topic') > -1){
+					return 'topic';
 				}
-				
+			},
+			finenessText: function(){
+				const v = this.item.fineness / 10;
+				return v === 10 ? '全新' : (v + '成新')
 			}
 		},
 		data() {
@@ -145,6 +155,9 @@
 			},
 			onPersonClicked: function(){
 				this.$emit('person-clicked',{item: this.item});
+			},
+			onProductClicked: function(){
+				this.$emit('product-clicked',{item: this.item});
 			}
 		}
 	}
@@ -243,6 +256,25 @@
 		.content{
 			width: 100%;
 			padding: 0;
+			.product-title{
+				display: flex;
+				flex-direction: row;
+				justify-content: space-between;
+				.fineness{
+					background-color: #007AFF;
+					color: white;
+					padding: 3px;
+					border-radius: 5px;
+					font-size: 11px;
+					font-weight: bold;
+					padding-right: 3px;
+					text-align: right;
+				}
+				.product-name{
+					font-weight: bold;
+					color: #666666;
+				}
+			}
 		}
 		.thumbnail{
 			display: flex;
@@ -250,7 +282,7 @@
 			width: 100%;
 			height: 70px;
 			.multi-img{
-				margin-left: 10;
+				margin-left: 10px;
 				width: 100%;
 				border-radius: 5px;
 				overflow: hidden;
@@ -265,6 +297,20 @@
 		}
 		.snippet{
 			margin-top:10px;
+			.price-tag{
+				.current{
+					font-size: 14px;
+					font-weight: bold;
+					padding-right:2px;
+					color: #007AFF;
+				}
+				.orig{
+					font-size: 13px;
+					color: $mk-base-color;
+					text-decoration: line-through;
+					padding-left: 2px;
+				}
+			}
 		}
 	}
 	

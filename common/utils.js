@@ -135,19 +135,65 @@ export default {
 		}
 		return Constants.PAGE.HOME_PERSON + JSON.stringify(params);
 	},
+	// 管理产品的页面
+	buildParamsForManageProductPageUrl: function(productId){
+		if(!productId){
+			productId = 0; // 如果没有传，就表示是创建产品, 那么赋值为0
+		}
+		return Constants.PAGE.MANAGE_PRODUCT + JSON.stringify({id: productId});
+	},
 	// 查看自己的个人主页
-	buildParamsForHomeProfilePageUrl: function(params){
+	buildParamsForHomeProfilePageUrl: function(){
 		return Constants.PAGE.HOME_PROFILE;
+	},
+	// 查看二手商店: 要传过来一个用户的id才行
+	buildParamsForHomeProductsPageUrl: function(){
+		return Constants.PAGE.HOME_SHOP;
 	},
 	// 用户上传图片的url
 	buildImageUploadUrl: function(){
 		return this.getBaseUrl() + Constants.API.USER.UPLOAD_PROFILE;
+	},
+	// 用户上传产品图片的url
+	buildProductImageUploadUrl: function(){
+		return this.getBaseUrl() + Constants.API.USER.UPLOAD_PRODUCT_IMAGE;
 	},
 	// 用户更新自己档案的
 	updateMyProfile: function(profile){
 		return request.post(
 			Constants.API.USER.UPLOAD_PROFILE,
 			profile,
+			{}
+		);
+	},
+	// 加载传入的用户为uuid的在售商品
+	loadProductsByUserUuid: function(uuid, currentPageIndex){
+		return request.post(
+			Constants.API.USER.LOAD_MY_PRODUCTS,
+			{uuid: uuid, index: currentPageIndex},
+			{}
+		);
+	},
+	// 用户保存产品
+	saveProductByUserUuid: function(product, images, ownerUuid){
+		return request.post(
+			Constants.API.USER.SAVE_MY_PRODUCT,
+			{product: product, ownerUuid: ownerUuid, images: images},
+			{}
+		);
+	},
+	// 加载产品的详情
+	loadProductById: function(id){
+		return request.get(
+			Constants.API.USER.LOAD_PRODUCT,
+			{id: id},
+			{}
+		);
+	},
+	deleteProductById: function(id,userUuid){
+		return request.get(
+			Constants.API.USER.DELETED_PRODUCT,
+			{id: id, userUuid: userUuid},
 			{}
 		);
 	},

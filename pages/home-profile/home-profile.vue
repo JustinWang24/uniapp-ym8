@@ -169,6 +169,7 @@
 	font-size: 15px;
 	color: #666;
 }
+
 .profile-avatar-wrap{
 	display: flex;
 	flex-wrap: wrap;
@@ -211,6 +212,7 @@
 		}
 	}
 }
+
 .profile-intro{
 	margin: 15px;
 	padding: 10px;

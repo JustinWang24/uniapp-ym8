@@ -38,6 +38,14 @@
             "path" : "pages/home-person/home-person",
             "style" : {}
         }
+        ,{
+            "path" : "pages/home-products/home-products",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/manage-product/manage-product",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

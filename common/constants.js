@@ -19,7 +19,12 @@ export default {
 			GET_NOTIFICATIONS:'/api/user/get-notifications',
 			GET_NEW_NOTIFICATIONS:'/api/user/get-new-notifications',
 			GET_OLD_NOTIFICATIONS:'/api/user/get-old-notifications',
-			UPLOAD_PROFILE:'/api/profile/update'
+			UPLOAD_PROFILE:'/api/profile/update',
+			LOAD_MY_PRODUCTS:'/api/products/load',
+			LOAD_PRODUCT:'/api/products/view-product',
+			DELETED_PRODUCT:'/api/products/delete-product',
+			SAVE_MY_PRODUCT:'/api/products/save',
+			UPLOAD_PRODUCT_IMAGE:'/api/products/upload-image',
 		},
 		WYSIWYG: {
 			LOAD_SHORTCODE:'/api/wysiwyg/shortcode/load',
@@ -53,5 +58,7 @@ export default {
 		HOME_DETAIL: '/pages/home-detail/home-detail?params=', // 查看文章的内容的页面
 		HOME_PERSON: '/pages/home-person/home-person?params=', // 查看别人的资料的页面
 		HOME_PROFILE: '/pages/home-profile/home-profile', // 用户自己的资料页面
+		HOME_SHOP: '/pages/home-products/home-products', //  用户的产品列表
+		MANAGE_PRODUCT: '/pages/manage-product/manage-product?params=', // 管理产品页面
 	}
 }

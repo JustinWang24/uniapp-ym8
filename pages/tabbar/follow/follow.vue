@@ -164,9 +164,6 @@ page{
 		flex: 1;
 		.followed-list-wrap{
 			height: 100%;
-			.swiper-item{
-				
-			}
 		}
 	}
 }

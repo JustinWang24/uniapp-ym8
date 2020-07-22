@@ -16,6 +16,7 @@
 					:item="item"
 					@card-clicked="onCardClicked"
 					@person-clicked="onPersonClicked"
+					@product-clicked="onProductClicked"
 				></list-card>
 				<uni-load-more v-if="needLoadMore" iconType="snow" :status="loadMoreStatus"></uni-load-more>
 			</view>
@@ -93,6 +94,9 @@
 			onPersonClicked: function(payload){
 				// 表示查看一个关注的人的个人资料
 				this.$emit('card-list-item-clicked',{type:'person', item: payload.item});
+			},
+			onProductClicked: function(payload) {
+				this.$emit('card-list-item-clicked',{type:'product', item: payload.item});
 			}
 		}
 	}
