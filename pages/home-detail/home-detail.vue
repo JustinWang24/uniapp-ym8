@@ -98,7 +98,7 @@
 					watches: 0,
 					images:[]
 				},
-				noData:'<p style="text-align:center;color:#666;">详情加载中 ...</p>',
+				noData:'',
 				comments:[],
 				comment:'', // 输入的评论内容
 				topicWatched: false,
