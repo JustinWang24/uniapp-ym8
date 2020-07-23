@@ -4,7 +4,8 @@
 		<swiper-item class="swiper-item" v-for="(theTag, theTagIndex) in localTags" :key="theTagIndex">
 			<list-scroll 
 				class="swiper-item-list" 
-				:theTag="theTag" @card-list-item-clicked="onCardListItemClicked">
+				:theTag="theTag" 
+				@card-list-item-clicked="onCardListItemClicked">
 			</list-scroll>
 		</swiper-item>
 	</swiper>
@@ -48,10 +49,11 @@
 			},
 			onCardListItemClicked: function(payload){
 				if(payload.type === 'product'){
-					console.log(payload.item.id)
 					uni.navigateTo({
 						url: Util.buildParamsForViewProductPageUrl(payload.item.id)
 					});
+				} else if(payload.type === 'person'){
+					console.log('交友')
 				} else {
 					uni.navigateTo({
 						url: Util.buildParamsForHomeDetailPageUrl(payload)

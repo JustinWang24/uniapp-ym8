@@ -7,8 +7,8 @@
 			...mapState(['userProfile'])
 		},
 		onLaunch: function() {
-			console.log('App Launch 只在全局触发一次的生命周期方法');
-			console.log('尝试加载用户的数据');
+			// console.log('App Launch 只在全局触发一次的生命周期方法');
+			// console.log('尝试加载用户的数据');
 			const userId = this.userProfile.uuid;
 			Util.getUserProfile(userId).then(res => {
 				if(Util.isAjaxResOk(res)){
@@ -23,10 +23,9 @@
 			})
 		},
 		onShow: function() {
-			console.log('App Show')
+			// 从后台进入前台, 应该尝试加载一下用户的基本数据
 		},
 		onHide: function() {
-			console.log('App Hide')
 		}
 	}
 </script>

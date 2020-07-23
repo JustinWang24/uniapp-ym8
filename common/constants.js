@@ -15,6 +15,7 @@ export default {
 			SIGN_UP:'/api/profile/sign-up',
 			SAVE_PROFILE:'/api/user/save-profile',
 			GET_PROFILE:'/api/profile/get',
+			WATCH_USER:'/api/user/watch-user',
 			UPDATE_PASSWORD:'/api/user/update-password',
 			GET_NOTIFICATIONS:'/api/user/get-notifications',
 			GET_NEW_NOTIFICATIONS:'/api/user/get-new-notifications',
@@ -59,7 +60,9 @@ export default {
 		HOME_PERSON: '/pages/home-person/home-person?params=', // 查看别人的资料的页面
 		HOME_PROFILE: '/pages/home-profile/home-profile', // 用户自己的资料页面
 		HOME_SHOP: '/pages/home-products/home-products', //  用户的产品列表
+		HOME_TOPICS: '/pages/my-topics/my-topics',       //  用户的所有发起的吐槽
 		MANAGE_PRODUCT: '/pages/manage-product/manage-product?params=', // 管理产品页面
 		VIEW_PRODUCT: '/pages/view-product/view-product?params=', // 浏览产品的详情页面
+		VIEW_SHOP: '/pages/view-shop/view-shop?params=', // 浏览其他人的二手商店
 	}
 }

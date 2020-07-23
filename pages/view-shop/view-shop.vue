@@ -10,10 +10,10 @@
 				</list-scroll>
 			</view>
 		</view>
-		<view class="toolbar" v-if="isShopOwner">
-			<view class="input-box" @click.stop="onAddProduct">
-				<uni-icons type="plus" size="20" color="#ffffff"></uni-icons>
-				<text>添加产品</text>
+		<view class="toolbar" v-if="!isShopOwner && currentUser.uuid">
+			<view class="input-box" @click.stop="onSaveAsFavorite">
+				<uni-icons type="heart" size="20" color="#ffffff"></uni-icons>
+				<text>关注店长</text>
 			</view>
 		</view>
 	</view>
@@ -25,44 +25,38 @@
 	
 	export default {
 		computed:{
-			...mapGetters(['currentUser','currentShopOwnerUuid']),
+			...mapGetters(['currentUser']),
 			isShopOwner: function(){
-				return this.currentUser.uuid === this.currentShopOwnerUuid;
+				return this.currentUser.uuid === this.ownerUuid;
 			}
 		},
 		onLoad(query){
 			// 获取传递过来的参数, 实现部分数据的预加载
 			const params = JSON.parse(query.params);
-			console.log(params)
-		},
-		onShow(){
-			// 获取传递过来的参数, 实现部分数据的预加载
-			this.loadProductsByUserUuid();
+			this.ownerUuid = params.ownerUuid;
+			this.loadProductsByUserUuid(this.ownerUuid);
 			this.currentPageIndex = 0;
 		},
 		data() {
 			return {
 				theProducts:{
 					items:[],
-					name:'我的二手商店',
+					name:'二手商店',
 					type:'topic_buy',  // 这个是固定的key
 				},
 				currentPageIndex: 0, // 当前的index
 				currentShopOnwner: null,
+				ownerUuid:null
 			};
 		},
 		methods:{
-			loadProductsByUserUuid: function(){
-				if(!Util.isEmpty(this.currentShopOwnerUuid)){
-					Util.loadProductsByUserUuid(this.currentShopOwnerUuid, this.currentPageIndex)
+			loadProductsByUserUuid: function(uuid){
+				if(!Util.isEmpty(uuid)){
+					Util.loadProductsByUserUuid(uuid, this.currentPageIndex)
 					.then(res => {
 						if(Util.isAjaxResOk(res)){
 							// 商品加载成功
-							if(this.isShopOwner){
-								this.theProducts.name = '我的二手商店';
-							} else {
-								this.theProducts.name = res.data.owner.name + '的二手商店';
-							}
+							this.theProducts.name = res.data.owner.name + '的二手商店';
 							this.currentShopOnwner = res.data.owner;
 							this.theProducts.items = res.data.products;
 						}
@@ -70,25 +64,26 @@
 				}
 			},
 			onProductItemClicked: function(payload){
-				// 当商品被点击时, 如果是自己的产品, 那么应该显示的编辑页面
 				// 如果是别人的商品, 那么显示的是购买或者卖家的页面
-				if(this.currentUser.id === payload.item.user_id){
-					// 表示是产品的主人
-					uni.navigateTo({
-						url: Util.buildParamsForManageProductPageUrl(payload.item.id)
-					});
-				} else {
-					// 表示用户在查看产品的详情
-					
-				}
+				uni.navigateTo({
+					url: Util.buildParamsForViewProductPageUrl(payload.item.id)
+				});
 			},
-			onAddProduct: function(){
+			onSaveAsFavorite: function(){
 				// 跳转到添加产品的页面
-				if(this.isShopOwner){
-					uni.navigateTo({
-						url: Util.buildParamsForManageProductPageUrl()
-					});
-				}
+				// 关注，成为发布者的朋友
+				Util.watchUser(this.ownerUuid).then(res => {
+					if(Util.isAjaxResOk(res)){
+						uni.showToast({
+							title:'谢谢关注'
+						});
+						// this.article.watches++;
+					} else {
+						uni.showToast({
+							title:res.message
+						});
+					}
+				});
 			}
 		}
 	}

@@ -56,7 +56,7 @@
 							this.lastSearchKeyword = q; // 记录下最后一个搜索的关键字
 							this._doSearch(q);
 						}
-					}, 900); // 两次搜索之间必有900毫秒的延迟
+					}, 500); // 两次搜索之间必有900毫秒的延迟
 				}
 			},
 			pushKeywordToHistory: function(keyword){
@@ -77,7 +77,17 @@
 			// 当搜索结果列表中的项目被点击
 			onListItemClicked: function(payload){
 				// 只有结果被点击, 才把关键字推入到搜索历史结果中
-				this.pushKeywordToHistory(this.lastSearchKeyword);
+				if(!Util.isEmpty(this.lastSearchKeyword)){
+					this.pushKeywordToHistory(this.lastSearchKeyword);
+				}
+				
+				if(payload.item.title_cn){
+					payload.type = 'au_news';
+					// 表示这个是新闻
+					uni.navigateTo({
+						url: Util.buildParamsForHomeDetailPageUrl(payload)
+					});
+				}
 			},
 			// 直接点击搜索历史中的关键字的响应
 			onSearchHistoryItemClicked: function(q){

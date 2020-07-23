@@ -45,9 +45,18 @@ const store = new Vuex.Store({
 		},
 		set_history({commit, state}, historyItem){
 			let theList = state.historyList;
-			theList.unshift(historyItem);
-			uni.setStorageSync('__history', theList); // 持久化到本地缓存中
-			commit('SET_HISTORY_LIST', theList);
+			let exist = false;
+			for(let i=0;i<theList.length;i++){
+				if(theList[i].name === historyItem.name){
+					exist = true;
+					break;
+				}
+			}
+			if(!exist){
+				theList.unshift(historyItem);
+				uni.setStorageSync('__history', theList); // 持久化到本地缓存中
+				commit('SET_HISTORY_LIST', theList);
+			}
 		},
 		// 清空历史记录
 		clear_history({commit, state}, historyItem){

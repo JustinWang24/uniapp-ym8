@@ -50,6 +50,14 @@
             "path" : "pages/view-product/view-product",
             "style" : {}
         }
+        ,{
+            "path" : "pages/my-topics/my-topics",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/view-shop/view-shop",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -15,6 +15,7 @@
 					:type="theLocalTag.type" 
 					:item="item"
 					@card-clicked="onCardClicked"
+					@topic-clicked="onTopicClicked"
 					@person-clicked="onPersonClicked"
 					@product-clicked="onProductClicked"
 				></list-card>
@@ -24,6 +25,7 @@
 	</view>
 </template>
 
+
 <script>
 	import Util from '../../common/utils.js';
 	export default {
@@ -31,7 +33,11 @@
 			theTag:{
 				type: Object,
 				default(){
-					return {}
+					return {
+						type:'', // 第一版 au_news, topic_arrive, topic_buy, topic_frind, topic_job
+						name:'',
+						items:[]
+					}
 				}
 			},
 			needLoadMore: {
@@ -85,18 +91,24 @@
 						}
 					})
 			},
-			// 当列表中的项被点击时
+			// 当列表中的项被点击时: 新闻
 			onCardClicked: function(payload){
 				// 在列表中，显示一些东西，表示该项目被点击过
 				// 再发布该事件: 表示该列表的类型, 例如新闻，话题，搜索结果等
 				this.$emit('card-list-item-clicked',{type:this.theTag.type, item: payload.item});
 			},
+			// 话题被点击
+			onTopicClicked: function(payload){
+				this.$emit('card-list-item-clicked',{type:this.theTag.type, item: payload.item});
+			},
+			// 交友, 是主题的一种，做一下特殊处理, 用在 关注->好友 模块中
 			onPersonClicked: function(payload){
 				// 表示查看一个关注的人的个人资料
-				this.$emit('card-list-item-clicked',{type:'person', item: payload.item});
+				this.$emit('card-list-item-clicked',payload);
 			},
+			// 二手市场
 			onProductClicked: function(payload) {
-				this.$emit('card-list-item-clicked',{type:'product', item: payload.item});
+				this.$emit('card-list-item-clicked',payload);
 			}
 		}
 	}

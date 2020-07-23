@@ -40,14 +40,14 @@
 					</view>
 					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
 				</view>
-				<view class="content-list">
+				<view class="content-list" @click="openMyTopics">
 					<view class="title">
 						<uni-icons class="icon" color="#666" type="bars" size="16px"></uni-icons>
 						<text>我的吐槽历史</text>
 					</view>
 					<uni-icons type="arrowright" size="14" color="#666"></uni-icons>
 				</view>
-				<view class="content-list">
+				<view class="content-list" v-if="false">
 					<view class="title">
 						<uni-icons class="icon" color="#666" type="email" size="16px"></uni-icons>
 						<text>查看我的私信</text>
@@ -208,6 +208,11 @@
 					url: Util.buildParamsForHomeProductsPageUrl()
 				})
 			},
+			openMyTopics: function(){
+				uni.navigateTo({
+					url: Util.buildParamsForMyTopicsPageUrl()
+				})
+			},
 			_prepareProfileObject: function(p){
 				const profile = {
 					uuid: p.id
@@ -293,10 +298,10 @@ page{
 		align-items: center;
 		padding-top: 30px;
 		.avatar{
-			height: 60px;
+			height: 100px;
 			border-radius: 50%;
 			overflow: hidden;
-			width: 60px;
+			width: 100px;
 			image{
 				width: 100%;
 				height: 100%;

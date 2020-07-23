@@ -4,7 +4,7 @@
 			<text>品名: {{ product.name }}</text>
 		</view>
 		<view class="header" v-if="product.user">
-			<view class="avatar">
+			<view class="avatar" @click.stop="goToUserProfile">
 				<image :src="product.user.avatar" mode="aspectFill"></image>
 			</view>
 			<view class="header-content">
@@ -47,20 +47,30 @@
 	
 		<view class="toolbar">
 			<view class="input-box" @click.stop="onComment">
-				<text>联系卖家</text>
+				<uni-icons size="16" color="#ffffff" type="phone"></uni-icons>
+				<text style="margin-left: 10px;">联系卖家</text>
 			</view>
 		</view>
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup-wrap">
 				<view class="area-head">
-					<text class="head-item" @click.stop="closeComment">关闭</text>
+					<view class="head-item">
+						<text>卖家简介</text>
+					</view>
+					<view class="head-item btn-close" @click.stop="closeComment">
+						<text style="margin-right: 5px;">关闭</text>
+						<uni-icons size="14" color="#ffffff" type="close"></uni-icons>
+					</view>
 				</view>
 				<view class="content-editor" v-if="product.user">
 					<view class="phone-btn" @click="callMe" v-if="product.user && product.user.phone">
 						<text>拨打电话: {{ product.user.phone }}</text>
 					</view>
 					<view class="intro">
-						简介: {{ product.user.intro }}
+						<u-parse :content="salesIntro" :noData="noIntro"></u-parse>
+					</view>
+					<view class="notes">
+						<text>移民吧无法审核商品的真伪,请注意自行核查,安全交易</text>
 					</view>
 				</view>
 			</view>
@@ -71,13 +81,21 @@
 <script>
 	import Util from '../../common/utils.js';
 	import {mapGetters} from 'vuex';
+	import uParse from '@/components/gaoyia-parse/parse.vue';
 	
 	export default {
+		components:{
+			uParse,
+		},
 		computed: {
 			...mapGetters(['currentUser']),
 			finenessText: function(){
 				const v = this.product.fineness / 10;
 				return v === 10 ? '全新' : (v + '成新')
+			},
+			salesIntro: function(){
+				const arr = this.currentUser.intro.split('\n');
+				return arr.join('<br>');
 			}
 		},
 		onLoad(query){
@@ -91,6 +109,7 @@
 					
 				},
 				images:[],
+				noIntro:'这家伙很懒, 什么也没写'
 			};
 		},
 		methods:{
@@ -121,6 +140,12 @@
 				uni.makePhoneCall({
 					phoneNumber: this.product.user.phone
 				});
+			},
+			// 去卖家的主页
+			goToUserProfile: function(){
+				uni.navigateTo({
+					url: Util.buildParamsForViewShopPageUrl(this.product.user.uuid)
+				})
 			}
 		}
 	}
@@ -144,8 +169,8 @@
 		margin: 0 15px;
 		padding-top: 15px;
 		.avatar{
-			width: 40px;
-			height: 40px;
+			width: 50px;
+			height: 50px;
 			border-radius: 50%;
 			overflow: hidden;
 			flex-shrink: 0;
@@ -266,19 +291,28 @@
 	left: 0;
 	right:0;
 	bottom: 0;
-	height: 320px;
+	height: 350px;
 	box-sizing: border-box;
 	.area-head{
 		display: flex;
 		flex-direction: row;
-		justify-content: end;
-		font-size: 14px;
-		color: $mk-base-color;
+		justify-content: space-between;
+		align-items: center;
 		border-bottom: solid 1px #f5f5f5;
 		.head-item{
-			height: 50px;
-			line-height: 50px;
+			height: 30px;
+			line-height: 30px;
 			padding: 0 15px;
+			font-size: 18px;;
+		}
+		.btn-close{
+			color: white;
+			background-color: $mk-base-color;
+			margin: 6px;
+			height: 30px;
+			line-height: 30px;
+			border-radius: 10px;
+			font-size: 14px;
 		}
 	}
 	.content-editor{
@@ -306,6 +340,15 @@
 			font-size: 14px;
 			overflow: hidden;
 		}
+	}
+	.notes{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 12px;
+		color: $mk-base-color;
+		line-height: 40px;
+		border-top: dotted 1px #eeeeee;
 	}
 }
 </style>

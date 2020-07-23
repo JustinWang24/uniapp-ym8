@@ -50,12 +50,21 @@
 		<uni-popup ref="popup" type="bottom">
 			<view class="popup-wrap">
 				<view class="area-head">
-					<text class="head-item" @click.stop="closeComment">取消</text>
-					<text class="head-item" @click.stop="submitComment" style="color: #007AFF;">发布</text>
+					<view class="head-item btn-close" @click.stop="closeComment">
+						<uni-icons size="14" color="#ffffff" type="close"></uni-icons>
+						<text style="margin-left: 5px;">取消</text>
+					</view>
+					<view class="head-item submit-btn" @click.stop="submitComment">
+						<text style="margin-right: 5px;">发布</text>
+						<uni-icons size="14" color="#ffffff" type="chatboxes"></uni-icons>
+					</view>
 				</view>
 				<view class="content-editor">
-					<textarea class="content-input" v-model="comment" placeholder="请输入 ..." :fixed="true" :maxlength="200"></textarea>
+					<textarea class="content-input" v-model="comment" placeholder="留下你的精彩评论吧 ..." :fixed="true" :maxlength="200"></textarea>
 					<view class="words-counter">{{ comment.length }}/200</view>
+				</view>
+				<view class="notes">
+					<text>请注意保持礼貌, 尊重他人表达意见的权利</text>
 				</view>
 			</view>
 		</uni-popup>
@@ -339,6 +348,22 @@
 			line-height: 50px;
 			padding: 0 15px;
 		}
+		.btn-close{
+			color: white;
+			background-color: $mk-base-color;
+			margin: 6px;
+			height: 30px;
+			line-height: 30px;
+			border-radius: 10px;
+		}
+		.submit-btn{
+			color: white;
+			background-color: #007AFF;
+			margin: 6px;
+			height: 30px;
+			line-height: 30px;
+			border-radius: 10px;
+		}
 	}
 	.content-editor{
 		padding: 15px;
@@ -355,6 +380,15 @@
 			font-size: 12px;
 			color: #999;
 		}
+	}
+	.notes{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 12px;
+		color: #999999;
+		line-height: 30px;
+		border-top: dotted 1px #eeeeee;
 	}
 }
 </style>

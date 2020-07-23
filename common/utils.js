@@ -106,6 +106,14 @@ export default {
 			{}
 		)
 	},
+	// 单独关注某人
+	watchUser: function(userUuid){
+		return request.post(
+			Constants.API.USER.WATCH_USER,
+			{id: userUuid},
+			{}
+		)
+	},
 	myTopics: function(pageIndex,fIndex){
 		return request.get(
 			Constants.API.TOPIC.MY_TOPICS,
@@ -128,7 +136,7 @@ export default {
 	buildParamsForFriendDetailPageUrl: function(payload){
 		const params = {
 			id: payload.item.id,
-			uuid: payload.item.id,
+			uuid: payload.item.uuid,
 			picture: payload.item.picture,
 			name: payload.item.name,
 			type: 'person'
@@ -153,9 +161,17 @@ export default {
 	buildParamsForHomeProfilePageUrl: function(){
 		return Constants.PAGE.HOME_PROFILE;
 	},
-	// 查看二手商店: 要传过来一个用户的id才行
+	// 查看自己的所有吐槽记录
+	buildParamsForMyTopicsPageUrl: function(){
+		return Constants.PAGE.HOME_TOPICS;
+	},
+	// 管理自己的商店
 	buildParamsForHomeProductsPageUrl: function(){
 		return Constants.PAGE.HOME_SHOP;
+	},
+	// 查看二手商店: 要传过来一个用户的id才行
+	buildParamsForViewShopPageUrl: function(ownerUuid){
+		return Constants.PAGE.VIEW_SHOP + JSON.stringify({ownerUuid: ownerUuid});
 	},
 	// 用户上传图片的url
 	buildImageUploadUrl: function(){

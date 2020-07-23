@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 基础卡片 -->
-		<view class="card" @click="onItemClicked" v-if="cardType === 'news'">
+		<view class="card" v-if="cardType === 'news'" @click="onNewsItemClicked">
 			<view class="thumbnail">
 				<image :src="item.picture" mode="aspectFill"></image>
 			</view>
@@ -37,7 +37,6 @@
 				</view>
 			</view>
 		</view>
-		
 		<!-- 用户的卡片 -->
 		<view class="card person" v-if="cardType === 'person'" @click="onPersonClicked">
 			<view class="thumbnail" v-if="item.picture">
@@ -118,7 +117,7 @@
 		},
 		computed:{
 			cardType:function(){
-				if(this.type.indexOf('news') > -1) {
+				if(this.type.indexOf('news') > -1 || this.item.title_cn) {
 					return 'news';
 				} else if(this.type === 'person'){
 					return 'person';
@@ -139,8 +138,8 @@
 			};
 		},
 		methods: {
-			onItemClicked: function(){
-				this.$emit('card-clicked',{item: this.item});
+			onNewsItemClicked: function(){
+				this.$emit('card-clicked',{item: this.item, type: this.cardType});
 			},
 			onTopicClicked: function(){
 				// 当话题被点击
@@ -151,13 +150,13 @@
 					trend: this.item.tags.join(' '),
 					picture:''
 				};
-				this.$emit('card-clicked',{item: theFakeItem});
+				this.$emit('topic-clicked',{item: theFakeItem, type: this.cardType});
 			},
 			onPersonClicked: function(){
-				this.$emit('person-clicked',{item: this.item});
+				this.$emit('person-clicked',{item: this.item, type: this.cardType});
 			},
 			onProductClicked: function(){
-				this.$emit('product-clicked',{item: this.item});
+				this.$emit('product-clicked',{item: this.item, type: this.cardType});
 			}
 		}
 	}
@@ -242,7 +241,7 @@
 				justify-content: space-between;
 				.piece-icons{
 					display: flex;
-					justify-content: end;
+					justify-content: flex-end;
 					.piece{
 						margin-left: 5px;
 					}
