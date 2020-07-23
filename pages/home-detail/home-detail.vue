@@ -7,6 +7,10 @@
 			<view class="avatar" v-if="isNews">
 				<image :src="article.picture" mode="aspectFill"></image>
 			</view>
+			<view class="avatar" v-else @click="goToUserHome">
+				<image :src="article.user_avatar" mode="aspectFill"></image>
+			</view>
+			
 			<view class="header-content">
 				<view class="author">{{ article.trend }}</view>
 				<view class="info">
@@ -23,6 +27,13 @@
 		</view>
 		<view class="content">
 			<u-parse :content="article.content" :noData="noData"></u-parse>
+			
+			<view v-if="article && article.images && article.images.length > 0" class="images-wrap">
+				<view class="images" v-for="(img, idx) in article.images" :key="idx">
+					<image :src="img" mode="aspectFill"></image>
+				</view>
+			</view>
+			
 			<view class="comments-wrap" v-if="comments && comments.length > 0">
 				<view class="comments-title">
 					<text style="color: #007AFF;">最新评论</text>
@@ -85,6 +96,7 @@
 				article:{
 					thumb_up: 0,
 					watches: 0,
+					images:[]
 				},
 				noData:'<p style="text-align:center;color:#666;">详情加载中 ...</p>',
 				comments:[],
@@ -120,13 +132,26 @@
 					if(Util.isAjaxResOk(res)){
 						this.article.title = res.data.item.title;
 						this.article.thumb_up = res.data.item.thumb_up; // 赞同数
-						this.article.watches = res.data.item.watches; // 赞同数
+						this.article.watches = res.data.item.watches; // 关注数
+						this.article.images = res.data.item.images;   // 图片
+						this.article.user_avatar = res.data.item.user_avatar;   // 图片
+						this.article.user_uuid = res.data.item.user_uuid;   // 图片
 						this.article.content = '<div>' + res.data.item.content + '</div>';
 						setTimeout((e)=>{
 							this.comments = res.data.item.comments;
 						},1000)
+					} else {
+						uni.showToast({
+							title:res.message
+						})
 					}
 				});
+			},
+			// 如果是吐槽文章, 点头像可以到发帖人的主页去
+			goToUserHome: function(){
+				uni.navigateTo({
+					url: Util.buildParamsForViewShopPageUrl(this.article.user_uuid)
+				})
 			},
 			onComment: function(){
 				this.$refs.popup.open();
@@ -269,7 +294,21 @@
 		padding-top: 15px;
 		line-height: 25px;
 		border-top: solid 1px #f5f5f5;
+		.images-wrap{
+			display: flex;
+			flex-direction: column;
+			width: 100%;
+			.images{
+				width: 100%;
+				padding: 1px;
+				image{
+					width: 100%;
+					border-radius: 10px;
+				}
+			}
+		}
 	}
+	
 	.comments-wrap{
 		display: flex;
 		flex-direction: column;

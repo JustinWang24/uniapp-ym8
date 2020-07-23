@@ -86,6 +86,7 @@
 							tpc.thumb_up = t.thumb_up;
 							tpc.title = t.title;
 							tpc.tags = JSON.parse(t.tags);
+							tpc.images = JSON.parse(t.images);
 							theTopics.push(tpc);
 						});
 						this.$store.dispatch(

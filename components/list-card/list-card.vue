@@ -80,22 +80,22 @@
 			</view>
 		</view>
 		<!-- 大图模式的卡片 -->
-		<!-- <view class="card big-image">
+		<view class="card big-image" v-if="cardType === 'topic_big_image'"  @click="onTopicClicked">
 			<view class="thumbnail">
-				<image src="../../static/logo.png" mode="aspectFill"></image>
+				<image :src="item.images[0]" mode="aspectFill"></image>
 			</view>
 			<view class="content">
 				<view class="title">
-					<text>标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题标题</text>
+					<text>{{ item.title }}</text>
 				</view>
 				<view class="snippet">
 					<view class="tag">
-						<view class="tag-txt">澳洲新闻</view>
+						<view class="tag-txt" v-for="(tagText,idx) in item.tags" :key="item.id+'_'+idx">{{tagText}}</view>
 					</view>
-					<view class="views-count">100浏览</view>
+					<view class="views-count">{{ item.views }}浏览</view>
 				</view>
 			</view>
-		</view> -->
+		</view>
 	</view>
 </template>
 
@@ -124,7 +124,11 @@
 				} else if(this.type === 'topic_buy') {
 					return 'product';
 				} else if(this.type.indexOf('topic') > -1){
-					return 'topic';
+					if(this.item.images && this.item.images.length > 0){
+						return 'topic_big_image'
+					} else {
+						return 'topic';
+					}
 				}
 			},
 			finenessText: function(){
