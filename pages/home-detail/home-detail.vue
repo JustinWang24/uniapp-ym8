@@ -117,13 +117,13 @@
 			const keys = Object.keys(params);
 			keys.forEach(key => {
 				this.article[key] = params[key];
-			})
+			});
 			this.loadItemContent();
 		},
 		computed: {
 			...mapGetters(['currentUser']),
 			isNews: function(){
-				return this.article.type.indexOf('news') > -1;
+				return this.article.type && this.article.type.indexOf('news') > -1;
 			}
 		},
 		methods:{
@@ -131,6 +131,9 @@
 				Util.getContentById(this.article.id, this.article.type).then(res => {
 					if(Util.isAjaxResOk(res)){
 						this.article.title = res.data.item.title;
+						this.article.trend = res.data.item.trend;
+						this.article.traffic = res.data.item.traffic;
+						this.article.picture = res.data.item.picture;
 						this.article.thumb_up = res.data.item.thumb_up; // 赞同数
 						this.article.watches = res.data.item.watches; // 关注数
 						this.article.images = res.data.item.images;   // 图片

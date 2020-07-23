@@ -143,6 +143,13 @@
 		},
 		methods: {
 			onNewsItemClicked: function(){
+				// const theFakeItem = {
+				// 	traffic: this.item.views,
+				// 	up: this.item.thumb_up,
+				// 	id: this.item.uuid,
+				// 	trend: this.item.tags.join(' '),
+				// 	picture:''
+				// };
 				this.$emit('card-clicked',{item: this.item, type: this.cardType});
 			},
 			onTopicClicked: function(){

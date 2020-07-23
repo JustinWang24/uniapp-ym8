@@ -8,7 +8,8 @@ export default {
 	PAGE_SIZE: 10,
 	FAKE_UUID:'fake',
 	MAX_FILE_UPLOADS_COUNT: 1,
-	BASE_URL: 'http://yiminbar.test',
+	// BASE_URL: 'http://yiminbar.test',
+	BASE_URL: 'https://ym8.com.au',
 	API: {
 		USER:{
 			LOGIN:'/api/profile/login',

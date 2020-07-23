@@ -149,9 +149,9 @@ export default {
 	buildParamsForHomeDetailPageUrl: function(payload){
 		const params = {
 			id: payload.item.id,
-			picture: payload.item.picture,
-			traffic: payload.item.traffic,
-			trend: payload.item.trend,
+			// picture: payload.item.picture,
+			// traffic: payload.item.traffic,
+			// trend: payload.item.trend,
 			type: payload.type
 		}
 		return Constants.PAGE.HOME_DETAIL + JSON.stringify(params);
