@@ -26,6 +26,7 @@ export default {
 			DELETED_PRODUCT:'/api/products/delete-product',
 			SAVE_MY_PRODUCT:'/api/products/save',
 			UPLOAD_PRODUCT_IMAGE:'/api/products/upload-image',
+			UPLOAD_TOPIC_IMAGE:'/api/topics/upload-image',
 		},
 		WYSIWYG: {
 			LOAD_SHORTCODE:'/api/wysiwyg/shortcode/load',
@@ -44,6 +45,8 @@ export default {
 			WATCH_USER:'/api/topics/watch-user',
 			WATCH_TOPIC:'/api/topics/watch-topic',
 			MY_TOPICS:'/api/topics/my-topics',
+			TOPICS_I_CREATED:'/api/topics/topics-i-created',
+			LOAD:'/api/topics/load-topic',
 		},
 		TAGS:{
 			GET_ALL:'/api/trends/get-tags',
@@ -64,5 +67,6 @@ export default {
 		MANAGE_PRODUCT: '/pages/manage-product/manage-product?params=', // 管理产品页面
 		VIEW_PRODUCT: '/pages/view-product/view-product?params=', // 浏览产品的详情页面
 		VIEW_SHOP: '/pages/view-shop/view-shop?params=', // 浏览其他人的二手商店
+		WRITE_TOPIC: '/pages/write-topic/write-topic',   // 创建吐槽文章
 	}
 }

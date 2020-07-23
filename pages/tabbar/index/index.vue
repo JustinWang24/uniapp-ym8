@@ -14,6 +14,7 @@
 </template>
 
 <script>
+	import {mapGetters} from 'vuex';
 	import Constants from '../../../common/constants.js';
 	import Util from '../../../common/utils.js';
 	
@@ -32,6 +33,10 @@
 				Util.getTags().then(res => {
 					if(Util.isAjaxResOk(res)){
 						this.tags = res.data.tags;
+						this.$store.dispatch(
+							'set_tags_of_topic',
+							res.data.tagsOfTopic
+						);
 					}
 				})
 			},

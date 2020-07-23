@@ -58,6 +58,10 @@
             "path" : "pages/view-shop/view-shop",
             "style" : {}
         }
+        ,{
+            "path" : "pages/write-topic/write-topic",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

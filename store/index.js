@@ -20,7 +20,9 @@ const store = new Vuex.Store({
 			items:[]
 		},
 		// 当前正在浏览的商店的主人的uuid
-		currentShopOwnerUuid:null
+		currentShopOwnerUuid:null,
+		// 吐槽可以包含的标题
+		tagsOfTopic: []
 	},
 	mutations:{
 		SET_HISTORY_LIST(state, newHistoryList){
@@ -38,8 +40,14 @@ const store = new Vuex.Store({
 		SET_CURRENT_SHOP_OWNER_UUID(state, uuid){
 			state.currentShopOwnerUuid = uuid;
 		},
+		SET_TAGS_OF_TOPIC(state, tags){
+			state.tagsOfTopic = tags;
+		},
 	},
 	actions:{
+		set_tags_of_topic({commit, state}, tags){
+			commit('SET_TAGS_OF_TOPIC', tags);
+		},
 		set_current_shop_owner_uuid({commit, state}, uuid){
 			commit('SET_CURRENT_SHOP_OWNER_UUID', uuid);
 		},
@@ -140,6 +148,9 @@ const store = new Vuex.Store({
 		},
 		currentShopOwnerUuid: state => {
 			return state.currentShopOwnerUuid;
+		},
+		tagsOfTopic: state => {
+			return state.tagsOfTopic;
 		}
 	}
 })

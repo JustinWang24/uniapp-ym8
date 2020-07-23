@@ -30,11 +30,6 @@
 				return this.currentUser.uuid === this.currentShopOwnerUuid;
 			}
 		},
-		onLoad(query){
-			// 获取传递过来的参数, 实现部分数据的预加载
-			const params = JSON.parse(query.params);
-			console.log(params)
-		},
 		onShow(){
 			// 获取传递过来的参数, 实现部分数据的预加载
 			this.loadProductsByUserUuid();

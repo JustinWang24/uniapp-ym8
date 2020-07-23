@@ -25,23 +25,40 @@
 	
 	export default {
 		computed:{
-			...mapGetters(['currentUser','myTopics']),
+			...mapGetters(['currentUser']),
 			isShopOwner: function(){
 				return this.currentUser.uuid === this.currentShopOwnerUuid;
 			}
 		},
+		onShow(){
+			this.loadTopicsICreated();
+		},
 		data() {
 			return {
+				myTopics:{
+					items:[],
+					type:'topic',
+					name:'mine',
+				}
 			};
 		},
 		methods:{
 			onTopicItemClicked: function(payload){
 				uni.navigateTo({
-					url: Util.buildParamsForHomeDetailPageUrl(payload)
-				});
+					url: Util.buildParamsWriteTopicPageUrl(payload.item.id)
+				})
 			},
 			onAddTopic: function(){
-				
+				uni.navigateTo({
+					url: Util.buildParamsWriteTopicPageUrl()
+				})
+			},
+			loadTopicsICreated: function(){
+				Util.topicsICreated(this.currentUser.id).then(res => {
+					if(Util.isAjaxResOk(res)){
+						this.myTopics.items = res.data.topics;
+					}
+				})
 			}
 		}
 	}

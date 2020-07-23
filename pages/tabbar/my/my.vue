@@ -114,6 +114,11 @@
 			this.isLoggedIn = this.currentUser.uuid !== undefined;
 			this._resetLoginForm();
 		},
+		onShow(){
+			if(this.isLoggedIn && !this.isMyTopicsHadBeenLoaded){
+				this.loadMyTopicsAndFriends();
+			}
+		},
 		data() {
 			return {
 				loginForm:{
@@ -122,6 +127,7 @@
 				},
 				isInLoginProgress: false,
 				isLoggedIn: false,
+				isMyTopicsHadBeenLoaded: false,
 				// 注册
 				startRegistration: false,
 				signUpForm:{
@@ -224,6 +230,7 @@
 				return profile;
 			},
 			loadMyTopicsAndFriends: function(){
+				this.isMyTopicsHadBeenLoaded = true;
 				// 登录成功之后, 去加载我关注的话题和我的朋友列表的第一页数据
 				Util.myTopics(0, 0).then(res => {
 					if(Util.isAjaxResOk(res)){

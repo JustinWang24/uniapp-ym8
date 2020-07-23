@@ -3,28 +3,23 @@
 		<view class="product-manager">
 			<form class="form product-form">
 				<view class="uni-form-item">
-					<input class="uni-input" v-model="product.name" placeholder="必填: 产品名" />
+					<input class="uni-input" v-model="topicForm.title" placeholder="必填: 吐槽标题" />
+				</view>
+				<view class="uni-form-item checkboxes-wrap">
+					<view class="wrap-title">
+						<text>吐槽对象</text>
+					</view>
+					<checkbox-group @change="checkboxChange">
+						<label v-for="(tagText, idx) in tagsOfTopic" :key="idx">
+							<checkbox :value="tagText" :checked="shallBeChecked(tagText)" />{{ tagText }}
+						</label>
+					</checkbox-group>
 				</view>
 				<view class="uni-form-item">
-					<input class="uni-input" v-model="product.location" placeholder="必填: 卖家所在区域, 如TAS" />
-				</view>
-				<view class="price-holder">
-					<view class="uni-form-item">
-						<input class="uni-input" v-model="product.full_price" placeholder="必填: 产品原价" />
-					</view>
-					<view class="uni-form-item">
-						<input class="uni-input" v-model="product.price" placeholder="必填: 卖出价" />
-					</view>
-				</view>
-				<view class="uni-form-item slider-item">
-					<view class="uni-title">商品状态: {{ product.fineness/10 }}成新</view>
-					<slider v-model="product.fineness" @change="sliderChange" step="10" />
-				</view>
-				<view class="uni-form-item">
-					<textarea class="uni-textarea" v-model="product.desc" placeholder="必填: 产品说明, 如品牌, 交付方式等"></textarea>
+					<textarea class="uni-textarea" v-model="topicForm.content" placeholder="必填: 吐槽内容"></textarea>
 				</view>
 				
-				<view class="images-wrap" v-if="product.id">
+				<view class="images-wrap" v-if="topicForm.id">
 					<view class="profile-subtitle">产品图片(最多6张)</view>
 					<view class="profile-avatar-wrap">
 						<view class="image-item" v-for="(img, index) in images" :key="index">
@@ -44,8 +39,7 @@
 				</view>
 				
 				<view class="uni-btn-v">
-					<view class="h-btn"><button @click.stop="onSaveProduct" type="primary" :loading="isInSavingProgress">保存产品</button></view>
-					<view class="h-btn"><button v-if="product.id" type="warn" @click.stop="deleteProduct">下架产品</button></view>
+					<view class="h-btn"><button @click.stop="onSaveTopic" type="primary" :loading="isInSavingProgress">保存</button></view>
 				</view>
 			</form>
 		</view>
@@ -57,92 +51,59 @@
 	import Util from '../../common/utils.js';
 	export default {
 		computed:{
-			...mapGetters(['currentUser','currentShopOwnerUuid']),
-			isShopOwner: function(){
-				return this.currentUser.uuid === this.currentShopOwnerUuid;
-			}
-		},
-		onLoad(query){
-			// 获取传递过来的参数, 实现部分数据的预加载
-			const params = JSON.parse(query.params);
-			const productId = parseInt(params.id);
-			if(productId !==0){
-				this.loadProduct(productId);
-			} else {
-				
-			}
+			...mapGetters(['currentUser','tagsOfTopic'])
 		},
 		watch:{
 			'uploadingImages':function(newList, oldList){
 				if(newList.length > 0 && newList.length === this.images.length){
 					// 表示上传完成了, 那就更新一下产品数据. 图片上传的异步进程全部完毕
-					this._simpleProductUpdate();
+					this._simpleTopicUpdate();
 				}
+			}
+		},
+		onLoad(query){
+			const params = JSON.parse(query.params);
+			this.loadTopicByUuid(params.id);
+		},
+		onShow(){
+			if(this.tagsOfTopic.length === 0){
+				this.$store.dispatch(
+					'set_tags_of_topic',
+					['初到澳洲','交友','工作','学习','渣男渣女','闲聊']
+				);
 			}
 		},
 		data() {
 			return {
-				product:{
+				topicForm:{
 					id: null,
-					name: '',
-					price: '',
-					full_price: '',
-					desc: '',
-					location: '',
-					fineness: 70
+					uuid: '',
+					title: '',
+					tags: [],
+					content: ''
 				},
 				images:[],
 				isInSavingProgress: false,
+				// 上传图片的缓存
 				uploadingImages:[],
 			};
 		},
-		methods:{
-			loadProduct: function(id){
-				Util.loadProductById(id).then(res => {
-					if(Util.isAjaxResOk(res)){
-						this.product.id = res.data.product.id;
-						this.product.name = res.data.product.name;
-						this.product.price = res.data.product.price;
-						this.product.full_price = res.data.product.full_price;
-						this.product.desc = res.data.product.desc;
-						this.product.location = res.data.product.location;
-						this.product.fineness = res.data.product.fineness;
-						this.images = res.data.product.images;
-					}
-				})
-			},
-			sliderChange: function(e){
-				this.product.fineness = e.detail.value;
-			},
-			_simpleProductUpdate: function(){
-				if(this.uploadingImages.length === this.images.length){
-					for(let i=0;i<this.images.length;i++){
-						this.images[i] = this.uploadingImages[i];
-					}
-				}
-				Util.saveProductByUserUuid(this.product, this.images, this.currentUser.uuid)
-				.then(res => {
-					if(Util.isAjaxResOk(res)){
-						this.product.id = res.data.id;
-					}
-					this.isInSavingProgress = false;
-					this.uploadingImages = [];
-				})
-			},
-			onSaveProduct: function(){
+		methods: {
+			// 这个方法只保存文字的内容
+			onSaveTopic: function(){
 				this.isInSavingProgress = true;
-				if(Util.isEmpty(this.product.id)){
-					this._simpleProductUpdate();
+				if(Util.isEmpty(this.topicForm.id)){
+					this._simpleTopicUpdate();
 				} else {
 					// 首先判断文件是否需要上传, 条件是: 只有一张图片
-					const formData = {product_id: this.product.id};
+					const formData = {topic_id: this.topicForm.id};
 					if(this.images.length > 0){
 						for(let i=0;i<this.images.length;i++){
 							const img = this.images[i];
 							if(img.indexOf('blob:') === 0){
 								// 表示需要上传
 								uni.uploadFile({
-									url: Util.buildProductImageUploadUrl(),
+									url: Util.buildTopicImageUploadUrl(),
 									header:{
 										'Authorization': 'Bearer ' + this.currentUser.uuid
 									},
@@ -164,10 +125,41 @@
 							}
 						}
 					} else {
-						this._simpleProductUpdate();
+						this._simpleTopicUpdate();
 					}
 				}
 			},
+			_simpleTopicUpdate: function(){
+				if(this.uploadingImages.length === this.images.length){
+					for(let i=0;i<this.images.length;i++){
+						this.images[i] = this.uploadingImages[i];
+					}
+				}
+				
+				Util.submitTopic(this.topicForm, this.currentUser.uuid, this.images).then(res => {
+					if(Util.isAjaxResOk(res)){
+						if(Util.isEmpty(this.topicForm.id)){
+							this.topicForm.id = res.data.id;
+							this.topicForm.uuid = res.data.uuid;
+						}
+						uni.showToast({
+							title: '保存成功'
+						});
+					} else {
+						uni.showToast({
+							title: res.message
+						});
+					}
+					this.isInSavingProgress = false;
+				});
+			},
+			checkboxChange: function(e){
+				this.topicForm.tags = e.detail.value;
+			},
+			shallBeChecked: function(text){
+				return this.topicForm.tags.indexOf(text) > -1;
+			},
+			// 图片上传相关方法
 			deleteImage: function(idx){
 				this.images.splice(idx, 1);
 			},
@@ -188,20 +180,19 @@
 					}
 				})
 			},
-			// 下架产品
-			deleteProduct: function(){
-				Util.deleteProductById(this.product.id, this.currentUser.uuid).then(res => {
+			// 图片上传相关方法结束
+			loadTopicByUuid: function(uuid){
+				Util.loadTopicByUuidToEdit(uuid, this.currentUser.uuid).then(res => {
 					if(Util.isAjaxResOk(res)){
-						// 删除成功, 返回产品列表页
+						this.topicForm.id = res.data.topic.id;
+						this.topicForm.uuid = uuid;
+						this.topicForm.title = res.data.topic.title;
+						this.topicForm.tags = res.data.topic.tags;
+						this.topicForm.content = res.data.topic.content;
+						this.images = res.data.topic.images;
+					} else {
 						uni.showToast({
-							title: '产品: ' + this.product.name + '已被删除' 
-						})
-						uni.navigateTo({
-							url: Util.buildParamsForHomeProductsPageUrl()
-						})
-					}else {
-						uni.showToast({
-							title: res.message
+							title:'话题已被删除'
 						})
 					}
 				})
@@ -246,15 +237,27 @@ page{
 					border-radius: 10px;
 					font-size: 14px;;
 				}
-				&.slider-item{
+				&.checkboxes-wrap{
 					display: flex;
 					flex-direction: column;
 					background-color: white;
 					padding: 10px;
 					border-radius: 10px;
 					width: 94%;
-					.uni-title{
-						font-size: 14px;
+					uni-checkbox-group{
+						uni-label{
+							font-size: 14px;
+							margin: 15px;
+							uni-checkbox{
+								transform:scale(0.7)
+							}
+						}
+					}
+					.wrap-title{
+						font-size: 16px;
+						color: $mk-base-color;
+						font-weight: bold;
+						margin-bottom: 10px;
 					}
 				}
 				.uni-textarea{
@@ -269,7 +272,7 @@ page{
 				display: flex;
 				justify-content: space-between;
 				.h-btn{
-					width: 40%;
+					width: 100%;
 					button{
 						margin-bottom: 10px;
 					}

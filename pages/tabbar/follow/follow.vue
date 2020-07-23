@@ -2,22 +2,24 @@
 	<view class="follow">
 		<view class="follow-tab">
 			<view class="box">
-				<view @click="tabClicked(0)" class="follow-item" :class="{active:activeIndex === 0}">话题</view>
-				<view @click="tabClicked(1)" class="follow-item" :class="{active:activeIndex === 1}">好友</view>
+				<view @click="tabClicked(0)" class="follow-item" :class="{active:activeIndex === 0}">好友</view>
+				<view @click="tabClicked(1)" class="follow-item" :class="{active:activeIndex === 1}">话题</view>
 			</view>
 		</view>
 		<view class="followed-list">
 			<swiper class="followed-list-wrap" @change="onSwiperChange" :current="activeIndex">
+				
 				<swiper-item>
 					<view class="swiper-item">
-						<list-scroll :theTag="myTopics" @card-list-item-clicked="onTopicListItemClicked">
+						<list-scroll :theTag="myGroup" @card-list-item-clicked="onGroupListItemClicked">
 							
 						</list-scroll>
 					</view>
 				</swiper-item>
+				
 				<swiper-item>
 					<view class="swiper-item">
-						<list-scroll :theTag="myGroup" @card-list-item-clicked="onGroupListItemClicked">
+						<list-scroll :theTag="myTopics" @card-list-item-clicked="onTopicListItemClicked">
 							
 						</list-scroll>
 					</view>
@@ -38,7 +40,7 @@
 				return this.currentUser.uuid !== undefined;
 			}
 		},
-		onLoad(){
+		onShow(){
 			if(this.isLoggedIn && this.isForceLoadingData && this.myTopics.items.length === 0 && this.myGroup.items.length === 0){
 				// 表示有可能还没有加载, 因此尝试从服务器获取一次, 但只有一次
 				this.isForceLoadingData = false;

@@ -126,6 +126,10 @@
 						this.product.views = res.data.product.views;
 						this.product.user = res.data.product.user;
 						this.images = res.data.product.images;
+					} else {
+						uni.showToast({
+							title:'产品已下架'
+						})
 					}
 				})
 			},

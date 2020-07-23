@@ -121,6 +121,30 @@ export default {
 			{}
 		)
 	},
+	// 加载话题的详情用来编辑
+	loadTopicByUuidToEdit: function(topicUuid, userUuid){
+		return request.get(
+			Constants.API.TOPIC.LOAD,
+			{topicUuid: topicUuid, userUuid: userUuid},
+			{}
+		)
+	},
+	// 提交吐槽话题
+	submitTopic: function(topic,userUuid, images){
+		return request.post(
+			Constants.API.TOPIC.SUBMIT,
+			{topic: topic, userUuid: userUuid, images: images},
+			{}
+		)
+	},
+	// 用户获取自己的创建的所有文章
+	topicsICreated: function(userId){
+		return request.get(
+			Constants.API.TOPIC.TOPICS_I_CREATED,
+			{userId: userId},
+			{}
+		)
+	},
 	// 将新闻或者话题展示详情时，通过这个方法来创建一个对象
 	buildParamsForHomeDetailPageUrl: function(payload){
 		const params = {
@@ -165,6 +189,13 @@ export default {
 	buildParamsForMyTopicsPageUrl: function(){
 		return Constants.PAGE.HOME_TOPICS;
 	},
+	// 撰写吐槽的页面
+	buildParamsWriteTopicPageUrl: function(topicId){
+		if(topicId){
+			return Constants.PAGE.WRITE_TOPIC + '?params=' + JSON.stringify({id: topicId});
+		}
+		return Constants.PAGE.WRITE_TOPIC;
+	},
 	// 管理自己的商店
 	buildParamsForHomeProductsPageUrl: function(){
 		return Constants.PAGE.HOME_SHOP;
@@ -180,6 +211,10 @@ export default {
 	// 用户上传产品图片的url
 	buildProductImageUploadUrl: function(){
 		return this.getBaseUrl() + Constants.API.USER.UPLOAD_PRODUCT_IMAGE;
+	},
+	// 用户上传Topic吐槽文章图片的url
+	buildTopicImageUploadUrl: function(){
+		return this.getBaseUrl() + Constants.API.USER.UPLOAD_TOPIC_IMAGE;
 	},
 	// 用户更新自己档案的
 	updateMyProfile: function(profile){
