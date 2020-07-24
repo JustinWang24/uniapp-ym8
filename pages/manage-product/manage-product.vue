@@ -139,7 +139,7 @@
 					if(this.images.length > 0){
 						for(let i=0;i<this.images.length;i++){
 							const img = this.images[i];
-							if(img.indexOf('blob:') === 0){
+							if(img.indexOf('blob:') > -1){
 								// 表示需要上传
 								uni.uploadFile({
 									url: Util.buildProductImageUploadUrl(),

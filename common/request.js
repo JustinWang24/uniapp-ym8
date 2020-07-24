@@ -5,11 +5,10 @@ export default {
 	// 全局配置
 	common:{
 		// #ifndef H5
-		// baseUrl:"https://ym8.com.au/api/",
 		baseUrl: Constants.BASE_URL,
 		// #endif
 		// #ifdef H5
-		baseUrl:Constants.BASE_URL,
+		baseUrl: Constants.BASE_URL,
 		// #endif
 		header:{
 			'Content-Type':'application/json;charset=UTF-8',

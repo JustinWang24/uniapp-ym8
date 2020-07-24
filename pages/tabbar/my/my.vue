@@ -3,12 +3,12 @@
 		<view v-if="isLoggedIn">
 			<view class="my-header">
 				<view class="header-bg">
-					<image :src="currentUser.avatar ? currentUser.avatar : '../../../static/logo.png'" mode="aspectFill"></image>
+					<image :src="myAvatar" mode="aspectFill"></image>
 				</view>
 				
 				<view class="avatar-wrap">
 					<view class="avatar">
-						<image :src="currentUser.avatar ? currentUser.avatar : '../../../static/logo.png'" mode="aspectFill"></image>
+						<image :src="myAvatar" mode="aspectFill"></image>
 					</view>
 					<text class="name-txt">{{ currentUser.name }}</text>
 				</view>
@@ -109,6 +109,9 @@
 	export default {
 		computed:{
 			...mapGetters(['currentUser']),
+			myAvatar: function(){
+				return this.currentUser.avatar ? this.currentUser.avatar : '../../../static/logo.png'
+			}
 		},
 		onLoad() {
 			this.isLoggedIn = this.currentUser.uuid !== undefined;

@@ -16,7 +16,6 @@
 <script>
 	import {mapGetters} from 'vuex';
 	import Util from '../../../common/utils.js';
-	
 	export default {
 		computed:{
 			...mapGetters(['currentUser']),
@@ -32,7 +31,6 @@
 		},
 		methods: {
 			getTags: function(){
-				console.log(this.currentUser)
 				Util.getTags().then(res => {
 					if(Util.isAjaxResOk(res)){
 						this.tags = res.data.tags;

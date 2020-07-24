@@ -27,7 +27,6 @@
 	</view>
 </template>
 
-
 <script>
 	import Util from '../../common/utils.js';
 	export default {
@@ -52,14 +51,19 @@
 				theLocalTag:this.theTag,
 				loadMoreStatus: 'noMore',
 				showLoadMoreTop: false, // 顶部的拉动刷新控件
-				currentPage: 1, // 当前的分页编号, 分页为0的在启动时已经加载了，所以这里是1
 			};
 		},
 		methods:{
 			// 当滚动动页面最下方
 			onScrollToLower: function(e){
 				this.loadMoreStatus = 'loading';
-				Util.loadMoreByTag('bottom',this.theLocalTag.type, this.currentPage)
+				let theEarliesItemId = -1;
+				const len = this.theLocalTag.items.length;
+				if(len > 0){
+					const theEarliestItem = this.theLocalTag.items[len-1];
+					theEarliesItemId = theEarliestItem.id;
+				}
+				Util.loadMoreByTag('bottom',this.theLocalTag.type, null, theEarliesItemId)
 					.then(res => {
 						if(Util.isAjaxResOk(res)){
 							this.loadMoreStatus = 'noMore';
@@ -67,7 +71,7 @@
 								// 有更多新闻加载
 								res.data.items.forEach(item => {
 									this.theLocalTag.items.push(item);
-								})
+								});
 							}
 						}
 					})
@@ -80,7 +84,7 @@
 					firstId = this.theLocalTag.items[0].id;
 				}
 				this.showLoadMoreTop = true;
-				Util.loadMoreByTag('top',this.theLocalTag.type, this.currentPage, firstId)
+				Util.loadMoreByTag('top',this.theLocalTag.type, null, firstId)
 					.then(res => {
 						if(Util.isAjaxResOk(res)){
 							this.showLoadMoreTop = false;

@@ -41,7 +41,8 @@
 		computed:{
 			...mapGetters(['currentUser']),
 		},
-		onLoad() {
+		onShow() {
+			this.imagesList = [];
 			if(!Util.isEmpty(this.currentUser.avatar)){
 				this.imagesList.push(this.currentUser.avatar);
 			}
@@ -65,8 +66,6 @@
 				const count = Constants.MAX_FILE_UPLOADS_COUNT - this.imagesList.length;
 				uni.chooseImage({
 					count: count,
-					// sizeType:['original', 'compressed'],
-					// sourceType: ['album'],
 					success: res =>{
 						const tempFilePaths = res.tempFilePaths;
 						if(this.imagesList.length === 1){
@@ -90,7 +89,7 @@
 				};
 				if(this.imagesList.length > 0){
 					const img = this.imagesList[0];
-					if(img.indexOf('blob:') === 0){
+					if(img.indexOf('blob:') > -1){
 						// 表示需要上传
 						uni.uploadFile({
 							url: Util.buildImageUploadUrl(),
@@ -103,7 +102,6 @@
 							success: res => {
 								if(res.statusCode === 200 && res.errMsg === 'uploadFile:ok'){
 									const resData = JSON.parse(res.data);
-									console.log(resData);
 									if(Util.isAjaxResOk(resData)){
 										this.$store.dispatch('set_user_profile',this._prepareProfileData(resData.data.item[0].file.url));
 										uni.showToast({
