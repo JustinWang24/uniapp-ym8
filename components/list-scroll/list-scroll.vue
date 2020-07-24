@@ -9,16 +9,18 @@
 			<view>
 				<!-- 新闻卡片 -->
 				<uni-load-more v-if="needLoadMore && showLoadMoreTop" iconType="snow" status="loading"></uni-load-more>
-				<list-card 
-					v-for="(item, idx) in theLocalTag.items" 
-					:key="idx" 
-					:type="theLocalTag.type" 
-					:item="item"
-					@card-clicked="onCardClicked"
-					@topic-clicked="onTopicClicked"
-					@person-clicked="onPersonClicked"
-					@product-clicked="onProductClicked"
-				></list-card>
+				<view>
+					<list-card
+						v-for="(item, idx) in theLocalTag.items" 
+						:key="idx" 
+						:type="theLocalTag.type" 
+						:item="item"
+						@card-clicked="onCardClicked"
+						@topic-clicked="onTopicClicked"
+						@person-clicked="onPersonClicked"
+						@product-clicked="onProductClicked"
+					></list-card>
+				</view>
 				<uni-load-more v-if="needLoadMore" iconType="snow" :status="loadMoreStatus"></uni-load-more>
 			</view>
 		</scroll-view>

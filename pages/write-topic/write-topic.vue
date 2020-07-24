@@ -167,8 +167,8 @@
 				let count = 6 - this.images.length;
 				uni.chooseImage({
 					count: count,
-					sizeType:['original', 'compressed'],
-					sourceType: ['album'],
+					// sizeType:['original', 'compressed'],
+					// sourceType: ['album'],
 					success: res =>{
 						const tempFilePaths = res.tempFilePaths;
 						if(tempFilePaths.length < count){
@@ -177,7 +177,7 @@
 						for(let i=0;i<count;i++){
 							this.images.push(tempFilePaths[i]);
 						}
-					}
+					},
 				})
 			},
 			// 图片上传相关方法结束

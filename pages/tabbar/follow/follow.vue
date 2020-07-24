@@ -40,11 +40,17 @@
 				return this.currentUser.uuid !== undefined;
 			}
 		},
+		watch:{
+			"currentUser": function(newVal){
+				if(!Util.isEmpty(newVal)){
+					this.loadMyTopicsAndFriends();
+				}
+			}
+		},
 		onShow(){
 			if(this.isLoggedIn && this.isForceLoadingData && this.myTopics.items.length === 0 && this.myGroup.items.length === 0){
 				// 表示有可能还没有加载, 因此尝试从服务器获取一次, 但只有一次
 				this.isForceLoadingData = false;
-				this.loadMyTopicsAndFriends();
 			}
 		},
 		data() {

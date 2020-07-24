@@ -75,11 +75,13 @@
 		},
 		methods:{
 			loadUser: function(uuid){
-				Util.getUserProfile(uuid).then(res => {
-					if(Util.isAjaxResOk(res)){
-						this.user.intro = res.data.profile.intro;
-					}
-				})
+				if(!Util.isEmpty(uuid)){
+					Util.getUserProfile(uuid).then(res => {
+						if(Util.isAjaxResOk(res)){
+							this.user.intro = res.data.profile.intro;
+						}
+					})
+				}
 			}
 		}
 	}

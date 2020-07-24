@@ -65,13 +65,10 @@
 				const count = Constants.MAX_FILE_UPLOADS_COUNT - this.imagesList.length;
 				uni.chooseImage({
 					count: count,
-					sizeType:['original', 'compressed'],
-					sourceType: ['album'],
+					// sizeType:['original', 'compressed'],
+					// sourceType: ['album'],
 					success: res =>{
 						const tempFilePaths = res.tempFilePaths;
-						// tempFilePaths.forEach( (item, index) => {
-						// 	this.imagesList[0] = item;
-						// })
 						if(this.imagesList.length === 1){
 							this.imagesList.splice(0, 1);
 						}
@@ -95,7 +92,7 @@
 					const img = this.imagesList[0];
 					if(img.indexOf('blob:') === 0){
 						// 表示需要上传
-						const uploadTask = uni.uploadFile({
+						uni.uploadFile({
 							url: Util.buildImageUploadUrl(),
 							header:{
 								'Authorization': 'Bearer ' + this.currentUser.uuid
@@ -106,8 +103,16 @@
 							success: res => {
 								if(res.statusCode === 200 && res.errMsg === 'uploadFile:ok'){
 									const resData = JSON.parse(res.data);
+									console.log(resData);
 									if(Util.isAjaxResOk(resData)){
 										this.$store.dispatch('set_user_profile',this._prepareProfileData(resData.data.item[0].file.url));
+										uni.showToast({
+											title:'保存成功'
+										})
+									} else {
+										uni.showToast({
+											title: resData.message
+										})
 									}
 								}
 								this.isSaving = false;
@@ -115,13 +120,6 @@
 							fail: err => {
 								this.isSaving = false;
 							}
-						});
-						
-						uploadTask.onProgressUpdate( res => {
-							this.uploadingProgress = res.progress;
-							// console.log('上传进度' + this.uploadingProgress);
-							// console.log('已经上传' + res.totalBytesSent);
-							// console.log('总计需要上传' + res.totalBytesExpectedToSend);
 						});
 					} else {
 						this.justUpdateProfile(formData);

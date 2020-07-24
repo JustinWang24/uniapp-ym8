@@ -15,7 +15,7 @@
 				<view class="author">{{ article.trend }}</view>
 				<view class="info">
 					<text v-if="isNews">
-						浏览量: {{ article.traffic }}+
+						热度: {{ article.traffic }}+
 					</text>
 					<text v-if="!isNews">
 						已关注: {{ article.watches }}
@@ -94,6 +94,9 @@
 		data() {
 			return {
 				article:{
+					trend: null,
+					traffic: null,
+					picture: null,
 					thumb_up: 0,
 					watches: 0,
 					images:[]
@@ -130,19 +133,19 @@
 			loadItemContent: function() {
 				Util.getContentById(this.article.id, this.article.type).then(res => {
 					if(Util.isAjaxResOk(res)){
-						this.article.title = res.data.item.title;
-						this.article.trend = res.data.item.trend;
-						this.article.traffic = res.data.item.traffic;
-						this.article.picture = res.data.item.picture;
-						this.article.thumb_up = res.data.item.thumb_up; // 赞同数
-						this.article.watches = res.data.item.watches; // 关注数
-						this.article.images = res.data.item.images;   // 图片
+						this.article.title 		= res.data.item.title;
+						this.article.trend 		= res.data.item.trend;
+						this.article.traffic 	= res.data.item.traffic;
+						this.article.picture 	= res.data.item.picture;
+						this.article.thumb_up 	= res.data.item.thumb_up; // 赞同数
+						this.article.watches 	= res.data.item.watches; // 关注数
+						this.article.images 	= res.data.item.images;   // 图片
 						this.article.user_avatar = res.data.item.user_avatar;   // 图片
-						this.article.user_uuid = res.data.item.user_uuid;   // 图片
-						this.article.content = '<div>' + res.data.item.content + '</div>';
+						this.article.user_uuid 	= res.data.item.user_uuid;   // 图片
+						this.article.content 	= '<div>' + res.data.item.content + '</div>';
 						setTimeout((e)=>{
 							this.comments = res.data.item.comments;
-						},1000)
+						},600);
 					} else {
 						uni.showToast({
 							title:res.message
