@@ -25,7 +25,7 @@
 			}
 		},
 		onShow: function() {
-			// 从后台进入前台, 应该尝试加载一下用户的基本数据
+			// 从后台进入前台, 应该尝试加载一下用户的基本数据 /home/wangyue/www-root/m-ym8
 		},
 		onHide: function() {
 		}
