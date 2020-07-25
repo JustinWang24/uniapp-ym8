@@ -89,7 +89,7 @@
 				};
 				if(this.imagesList.length > 0){
 					const img = this.imagesList[0];
-					if(img.indexOf('blob:') > -1){
+					if(Util.isLocalTempFileUrl(img)){
 						// 表示需要上传
 						uni.uploadFile({
 							url: Util.buildImageUploadUrl(),

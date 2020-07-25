@@ -256,6 +256,10 @@ export default {
 			{}
 		);
 	},
+	// 判断给定的字符串是否是一个需要上传的. blob是浏览器, http://tmp/ 是小程序和APP中的
+	isLocalTempFileUrl: function(str){
+		return str.indexOf('blob:') > -1 || str.indexOf('http://tmp/') > -1;
+	},
     /**
      * 根据 id 来定位数组中的 item
      * @param id
