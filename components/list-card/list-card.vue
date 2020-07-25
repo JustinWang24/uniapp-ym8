@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 基础卡片 -->
-		<view class="card" v-if="cardType === 'news'" @click="onNewsItemClicked">
+		<view class="card" v-if="parseCardType() === 'news'" @click="onNewsItemClicked">
 			<view class="thumbnail">
 				<image :src="item.picture" mode="aspectFill"></image>
 			</view>
@@ -21,7 +21,7 @@
 			</view>
 		</view>
 		<!-- 话题的卡片 -->
-		<view class="card big-image" v-if="cardType === 'topic'" @click="onTopicClicked">
+		<view class="card big-image" v-if="parseCardType() === 'topic'" @click="onTopicClicked">
 			<view class="thumbnail" v-if="item.picture">
 				<image src="../../static/logo.png" mode="aspectFill"></image>
 			</view>
@@ -31,14 +31,14 @@
 				</view>
 				<view class="snippet">
 					<view class="tag">
-						<view class="tag-txt" v-for="(tagText,idx) in item.tags" :key="item.id+'_'+idx">{{tagText}}</view>
+						<view class="tag-txt" v-for="(tagText,idx) in item.tags" :key="buildUniqueIdx(item, idx)">{{tagText}}</view>
 					</view>
 					<view class="views-count">{{ item.views }}浏览</view>
 				</view>
 			</view>
 		</view>
 		<!-- 用户的卡片 -->
-		<view class="card person" v-if="cardType === 'person'" @click="onPersonClicked">
+		<view class="card person" v-if="parseCardType() === 'person'" @click="onPersonClicked">
 			<view class="thumbnail" v-if="item.picture">
 				<image :src="item.picture" mode="aspectFill"></image>
 			</view>
@@ -56,7 +56,7 @@
 			</view>
 		</view>
 		<!-- 产品的卡片 -->
-		<view class="card with-multi-images" v-if="cardType === 'product'" @click="onProductClicked">
+		<view class="card with-multi-images" v-if="parseCardType() === 'product'" @click="onProductClicked">
 			<view class="content">
 				<view class="title product-title">
 					<view class="product-name">{{ item.name }}</view>
@@ -80,7 +80,7 @@
 			</view>
 		</view>
 		<!-- 大图模式的卡片 -->
-		<view class="card big-image" v-if="cardType === 'topic_big_image'"  @click="onTopicClicked">
+		<view class="card big-image" v-if="parseCardType() === 'topic_big_image'"  @click="onTopicClicked">
 			<view class="thumbnail">
 				<image :src="item.images[0]" mode="aspectFill"></image>
 			</view>
@@ -90,7 +90,7 @@
 				</view>
 				<view class="snippet">
 					<view class="tag">
-						<view class="tag-txt" v-for="(tagText,idx) in item.tags" :key="item.id+'_'+idx">{{tagText}}</view>
+						<view class="tag-txt" v-for="(tagText,idx) in item.tags" :key="buildUniqueIdx(item, idx)">{{tagText}}</view>
 					</view>
 					<view class="views-count">{{ item.views }}浏览</view>
 				</view>
@@ -116,10 +116,10 @@
 			}
 		},
 		computed:{
-			cardType:function(){
+			cardType: function(){
 				if(this.type.indexOf('news') > -1 || this.item.title_cn) {
 					return 'news';
-				} else if(this.type === 'person'){
+				} else if(this.type === 'person' || this.type === 'topic_friend'){
 					return 'person';
 				} else if(this.type === 'topic_buy') {
 					return 'product';
@@ -142,6 +142,21 @@
 			};
 		},
 		methods: {
+			parseCardType: function(){
+				if(this.type.indexOf('news') > -1 || this.item.title_cn) {
+					return 'news';
+				} else if(this.type === 'person'){
+					return 'person';
+				} else if(this.type === 'topic_buy') {
+					return 'product';
+				} else if(this.type.indexOf('topic') > -1){
+					if(this.item.images && this.item.images.length > 0){
+						return 'topic_big_image'
+					} else {
+						return 'topic';
+					}
+				}
+			},
 			onNewsItemClicked: function(){
 				// const theFakeItem = {
 				// 	traffic: this.item.views,
@@ -168,6 +183,9 @@
 			},
 			onProductClicked: function(){
 				this.$emit('product-clicked',{item: this.item, type: this.cardType});
+			},
+			buildUniqueIdx: function(item, idx){
+				return item.id+'_'+idx;
 			}
 		}
 	}

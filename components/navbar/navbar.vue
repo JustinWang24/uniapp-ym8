@@ -19,9 +19,8 @@
 					<view class="navbar-search_icon">
 						<uni-icons type="search" size="16" color="#999"></uni-icons>
 					</view>
-					<view class="navbar-search_text">搜索 澳洲最新资讯 吃喝玩乐 吐槽大会</view>
+					<view class="navbar-search_text">搜索 最新资讯 吃喝玩乐</view>
 				</view>
-				
 			</view>
 		</view>
 		<view class="navbar-placeholder" :style="{height: statusBarHeight + navBarHeight + 'px'}">

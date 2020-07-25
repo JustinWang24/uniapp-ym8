@@ -124,7 +124,7 @@
 			this.loadItemContent();
 		},
 		computed: {
-			...mapGetters(['currentUser']),
+			...mapGetters(['currentUser','isTheUserLoggedIn']),
 			isNews: function(){
 				return this.article.type && this.article.type.indexOf('news') > -1;
 			}
@@ -195,7 +195,7 @@
 				});
 			},
 			likeThis: function(){
-				if(Util.isEmpty(this.currentUser.uuid)){
+				if(!this.isTheUserLoggedIn){
 					uni.showToast({
 						title:'请先登录'
 					});

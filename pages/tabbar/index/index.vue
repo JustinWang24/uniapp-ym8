@@ -26,7 +26,7 @@
 				activeTagIndex:0, // 默认总是第一个高亮
 			}
 		},
-		onLoad() {
+		onShow() {
 			this.getTags();
 		},
 		methods: {

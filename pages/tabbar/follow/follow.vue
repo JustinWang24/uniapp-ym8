@@ -6,9 +6,9 @@
 				<view @click="tabClicked(1)" class="follow-item" :class="{active:activeIndex === 1}">话题</view>
 			</view>
 		</view>
-		<view class="followed-list">
+		
+		<view class="followed-list" v-if="isTheUserLoggedIn">
 			<swiper class="followed-list-wrap" @change="onSwiperChange" :current="activeIndex">
-				
 				<swiper-item>
 					<view class="swiper-item">
 						<list-scroll :theTag="myGroup" @card-list-item-clicked="onGroupListItemClicked">
@@ -16,7 +16,6 @@
 						</list-scroll>
 					</view>
 				</swiper-item>
-				
 				<swiper-item>
 					<view class="swiper-item">
 						<list-scroll :theTag="myTopics" @card-list-item-clicked="onTopicListItemClicked">
@@ -25,6 +24,13 @@
 					</view>
 				</swiper-item>
 			</swiper>
+		</view>
+		<view class="notes-wrap" v-else>
+			<view class="text">
+				<text>
+					您还没有登录, 所以我们无法获取您的站内好友和关注的话题. 请您点击下面的右下角的 "我的首页", 进行登录或注册的操作.
+				</text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -35,20 +41,17 @@
 	
 	export default {
 		computed:{
-			...mapGetters(['currentUser','myTopics','myGroup']),
-			isLoggedIn: function(){
-				return this.currentUser.uuid !== undefined;
-			}
+			...mapGetters(['currentUser','myTopics','myGroup','isTheUserLoggedIn']),
 		},
 		watch:{
-			"currentUser": function(newVal){
-				if(!Util.isEmpty(newVal)){
+			"isTheUserLoggedIn": function(newVal){
+				if(newVal){
 					this.loadMyTopicsAndFriends();
 				}
 			}
 		},
 		onShow(){
-			if(this.isLoggedIn && this.isForceLoadingData && this.myTopics.items.length === 0 && this.myGroup.items.length === 0){
+			if(this.isTheUserLoggedIn && this.isForceLoadingData && this.myTopics.items.length === 0 && this.myGroup.items.length === 0){
 				// 表示有可能还没有加载, 因此尝试从服务器获取一次, 但只有一次
 				this.isForceLoadingData = false;
 			}
@@ -141,6 +144,23 @@ page{
 	flex-direction: column;
 	flex: 1;
 	box-sizing: border-box;
+	.notes-wrap{
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		justify-content: center;
+		align-items: center;
+		padding-top: 50px;
+		.text{
+			width: 80%;
+			background-color: white;
+			padding: 15px;
+			border: solid 1px #f5f5f5;
+			border-radius: 10px;
+			line-height: 1.6;
+			font-size: 14px;
+		}
+	}
 	.follow-tab{
 		height: 30px;
 		padding: 10px 20px;

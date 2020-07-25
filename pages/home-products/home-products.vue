@@ -5,8 +5,7 @@
 		</view>
 		<view class="products-wrap">
 			<view class="products">
-				<list-scroll :theTag="theProducts" @card-list-item-clicked="onProductItemClicked">
-					
+				<list-scroll :theTag="theProducts" :needLoadMore="false" @card-list-item-clicked="onProductItemClicked">
 				</list-scroll>
 			</view>
 		</view>
@@ -39,7 +38,7 @@
 			return {
 				theProducts:{
 					items:[],
-					name:'我的二手商店',
+					name:'',
 					type:'topic_buy',  // 这个是固定的key
 				},
 				currentPageIndex: 0, // 当前的index
@@ -59,7 +58,12 @@
 								this.theProducts.name = res.data.owner.name + '的二手商店';
 							}
 							this.currentShopOnwner = res.data.owner;
-							this.theProducts.items = res.data.products;
+							this.theProducts.items = [];
+							if(res.data.products && res.data.products.length > 0){
+								res.data.products.forEach(p => {
+									this.theProducts.items.push(p);
+								});
+							}
 						}
 					})
 				}
@@ -74,7 +78,9 @@
 					});
 				} else {
 					// 表示用户在查看产品的详情
-					
+					uni.navigateTo({
+						url: Util.buildParamsForViewProductPageUrl(payload.item.id)
+					});
 				}
 			},
 			onAddProduct: function(){

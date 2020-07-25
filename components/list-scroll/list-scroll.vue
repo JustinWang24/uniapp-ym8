@@ -12,7 +12,7 @@
 				<view>
 					<list-card
 						v-for="(item, idx) in theLocalTag.items" 
-						:key="idx" 
+						:key="item.id" 
 						:type="theLocalTag.type" 
 						:item="item"
 						@card-clicked="onCardClicked"
@@ -33,7 +33,7 @@
 		props:{
 			theTag:{
 				type: Object,
-				default(){
+				default() {
 					return {
 						type:'', // 第一版 au_news, topic_arrive, topic_buy, topic_frind, topic_job
 						name:'',
@@ -46,6 +46,14 @@
 				default: true
 			}
 		},
+		watch:{
+			'theTag': function(newTag){
+				this.theLocalTag.items = [];
+				newTag.items.forEach(i => {
+					this.theLocalTag.items.push(i);
+				})
+			}
+		},
 		data() {
 			return {
 				theLocalTag:this.theTag,
@@ -56,6 +64,9 @@
 		methods:{
 			// 当滚动动页面最下方
 			onScrollToLower: function(e){
+				if(!this.needLoadMore){
+					return;
+				}
 				this.loadMoreStatus = 'loading';
 				let theEarliesItemId = -1;
 				const len = this.theLocalTag.items.length;
@@ -78,6 +89,9 @@
 			},
 			// 当滚动到页面最上方
 			onScrollToUpper: function(e){
+				if(!this.needLoadMore){
+					return;
+				}
 				// 获取最顶端的item的id
 				let firstId = 0;
 				if(this.theLocalTag.items.length > 0){

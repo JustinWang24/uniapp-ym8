@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view v-if="isLoggedIn">
+		<view v-if="isTheUserLoggedIn">
 			<view class="my-header">
 				<view class="header-bg">
 					<image :src="myAvatar" mode="aspectFill"></image>
@@ -57,7 +57,7 @@
 			</view>
 		</view>
 		
-		<view class="logout-btn-wrap" v-if="isLoggedIn">
+		<view class="logout-btn-wrap" v-if="isTheUserLoggedIn">
 			<button type="warn" @click="onLogout">退出</button>
 		</view>
 		<view class="entrance-wrap" v-else>
@@ -108,19 +108,16 @@
 	
 	export default {
 		computed:{
-			...mapGetters(['currentUser']),
-			myAvatar: function(){
-				return this.currentUser.avatar ? this.currentUser.avatar : '../../../static/logo.png'
-			}
+			...mapGetters(['currentUser','isTheUserLoggedIn']),
 		},
 		onLoad() {
-			this.isLoggedIn = this.currentUser.uuid !== undefined;
 			this._resetLoginForm();
 		},
 		onShow(){
-			if(this.isLoggedIn && !this.isMyTopicsHadBeenLoaded){
+			if(this.isTheUserLoggedIn && !this.isMyTopicsHadBeenLoaded){
 				this.loadMyTopicsAndFriends();
 			}
+			this.refreshAvatarUrl();
 		},
 		data() {
 			return {
@@ -129,7 +126,6 @@
 					password:''
 				},
 				isInLoginProgress: false,
-				isLoggedIn: false,
 				isMyTopicsHadBeenLoaded: false,
 				// 注册
 				startRegistration: false,
@@ -140,15 +136,18 @@
 					password:'',
 				},
 				isInSignUpProgress: false,
+				myAvatar: '../../../static/logo.png'
 			};
 		},
 		methods:{
+			refreshAvatarUrl: function(){
+				this.myAvatar = this.isTheUserLoggedIn ? this.currentUser.avatar : '../../../static/logo.png';
+			},
 			onLogout: function(){
 				this.$store.dispatch(
 					'logout', 	// Action 中的方法名
 					null 		// Action 的方法的第二个参数
 				);
-				this.isLoggedIn = false;
 				this._resetLoginForm();
 			},
 			onLogin: function(e){
@@ -163,7 +162,7 @@
 						uni.showToast({
 							title: '登录成功'
 						})
-						this.isLoggedIn = true;
+						this.refreshAvatarUrl();
 						this.loadMyTopicsAndFriends();
 					} else {
 						// 登录失败
@@ -186,7 +185,6 @@
 						uni.showToast({
 							title: '注册成功'
 						})
-						this.isLoggedIn = true;
 					} else {
 						// 注册失败
 						uni.showToast({

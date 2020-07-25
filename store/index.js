@@ -9,6 +9,7 @@ const store = new Vuex.Store({
 	state:{
 		historyList: uni.getStorageSync('__history')||[], // 以持久化的方式获取，从本地缓存中获取。如果 __history 不存在, 则返回空数组
 		userProfile: uni.getStorageSync('__profile')||{}, // 用户数据
+		isTheUserLoggedIn: false,
 		// 当前用户关注的话题
 		myTopics: {
 			type:'topic',
@@ -25,6 +26,9 @@ const store = new Vuex.Store({
 		tagsOfTopic: []
 	},
 	mutations:{
+		SET_IS_USER_LOGGED_IN(state, status){
+			state.isTheUserLoggedIn = status;
+		},
 		SET_HISTORY_LIST(state, newHistoryList){
 			state.historyList = newHistoryList;
 		},
@@ -79,11 +83,13 @@ const store = new Vuex.Store({
 				currentProfile[key] = profile[key];
 			});
 			uni.setStorageSync('__profile', currentProfile);
+			commit('SET_IS_USER_LOGGED_IN', !Util.isEmpty(currentProfile.uuid));
 			commit('SET_USER_PROFILE', currentProfile);
 		},
 		// 用户退出
 		logout({commit, state}, profile){
 			uni.removeStorageSync('__profile'); // 清理本地缓存
+			commit('SET_IS_USER_LOGGED_IN', false);
 			commit('SET_USER_PROFILE', {});
 		},
 		// 设置当前的话题
@@ -151,6 +157,9 @@ const store = new Vuex.Store({
 		},
 		tagsOfTopic: state => {
 			return state.tagsOfTopic;
+		},
+		isTheUserLoggedIn: state => {
+			return state.isTheUserLoggedIn;
 		}
 	}
 })

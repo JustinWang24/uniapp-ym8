@@ -49,17 +49,22 @@
 		computed:{
 			...mapGetters(['currentUser']),
 			salesIntro: function(){
-				const arr = this.user.intro.split('\n');
-				return arr.join('<br>');
+				if(!Util.isEmpty(this.user.intro)){
+					const arr = this.user.intro.split('\n');
+					return arr.join('<br>');
+				}
+				return '';
 			}
 		},
 		onLoad(query) {
-			const params = JSON.parse(query.params);
-			this.user.id = params.id;
-			this.user.uuid = params.uuid;
-			this.user.name = params.name;
-			this.user.picture = params.picture;
-			this.loadUser(params.uuid)
+			if(!Util.isEmpty(query)){
+				const params = JSON.parse(query.params);
+				this.user.id = params.id;
+				this.user.uuid = params.uuid;
+				this.user.name = params.name;
+				this.user.picture = params.picture;
+				this.loadUser(params.uuid)
+			}
 		},
 		data() {
 			return {

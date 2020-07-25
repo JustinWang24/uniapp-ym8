@@ -90,12 +90,18 @@
 		computed: {
 			...mapGetters(['currentUser']),
 			finenessText: function(){
-				const v = this.product.fineness / 10;
-				return v === 10 ? '全新' : (v + '成新')
+				if(this.product.fineness){
+					const v = this.product.fineness / 10;
+					return v === 10 ? '全新' : (v + '成新')
+				}
+				return '未知';
 			},
 			salesIntro: function(){
-				const arr = this.currentUser.intro.split('\n');
-				return arr.join('<br>');
+				if(this.currentUser.intro){
+					const arr = this.currentUser.intro.split('\n');
+					return arr.join('<br>');
+				}
+				return '未知';
 			}
 		},
 		onLoad(query){
@@ -106,7 +112,17 @@
 		data() {
 			return {
 				product:{
-					
+					id:null,
+					name:'',
+					price:0,
+					full_price:0,
+					desc:'',
+					location:'',
+					fineness:0,
+					views:0,
+					user:{
+						id:null, name:'',uuid:null,avatar:''
+					},
 				},
 				images:[],
 				noIntro:'这家伙很懒, 什么也没写'

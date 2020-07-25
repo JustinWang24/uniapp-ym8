@@ -9,9 +9,9 @@
 					<view class="wrap-title">
 						<text>吐槽对象</text>
 					</view>
-					<checkbox-group @change="checkboxChange">
-						<label v-for="(tagText, idx) in tagsOfTopic" :key="idx">
-							<checkbox :value="tagText" :checked="shallBeChecked(tagText)" />{{ tagText }}
+					<checkbox-group class="the-checkbox-group" @change="checkboxChange">
+						<label class="the-uni-label" v-for="(tagText, idx) in tagsOfTopic" :key="idx">
+							<checkbox class="the-checkbox" :value="tagText" :checked="shallBeChecked(tagText)" />{{ tagText }}
 						</label>
 					</checkbox-group>
 				</view>
@@ -62,8 +62,10 @@
 			}
 		},
 		onLoad(query){
-			const params = JSON.parse(query.params);
-			this.loadTopicByUuid(params.id);
+			if(!Util.isEmpty(query)){
+				const params = JSON.parse(query.params);
+				this.loadTopicByUuid(params.id);
+			}
 		},
 		onShow(){
 			if(this.tagsOfTopic.length === 0){
@@ -244,11 +246,11 @@ page{
 					padding: 10px;
 					border-radius: 10px;
 					width: 94%;
-					uni-checkbox-group{
-						uni-label{
+					.the-checkbox-group{
+						.the-uni-label{
 							font-size: 14px;
-							margin: 15px;
-							uni-checkbox{
+							margin: 20px;
+							.the-checkbox{
 								transform:scale(0.7)
 							}
 						}
